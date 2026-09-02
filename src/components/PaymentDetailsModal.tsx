@@ -48,8 +48,8 @@ export function PaymentDetailsModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(76,76,76,0.5)]">
-      <div className="flex max-h-[90vh] w-[1180px] flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
+    <div className="fixed inset-0 z-[60] bg-[rgba(76,76,76,0.5)]">
+      <div className="fixed inset-2xl z-[60] flex flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <header className="flex h-12 shrink-0 items-center gap-sm border-b border-border-primary px-md py-xs">
           <h1 className="text-[20px] leading-[28px] font-normal text-text-secondary">Payment Details</h1>
           <StatusLozenge status={payment.status} />
@@ -58,16 +58,17 @@ export function PaymentDetailsModal({
           </button>
         </header>
 
-        <div className="flex flex-1 gap-md overflow-y-auto p-md">
-          <div className="flex flex-1 flex-col gap-md">
-            <div className="flex items-center justify-between border-b border-brand-blue pb-xxs">
-              <span className="text-sm font-semibold text-text-primary">Payment Details</span>
+        <div className="flex flex-1 flex-wrap gap-md overflow-y-auto bg-[#f3f4f8] p-md">
+          <div className="flex min-w-[420px] flex-1 flex-col overflow-hidden rounded-sm border border-border-primary bg-white">
+            <div className="flex min-h-9 shrink-0 items-center justify-between border-b-2 border-brand-blue p-xs">
+              <span className="text-sm font-semibold text-text-secondary">Payment Details</span>
               <button type="button" className="flex items-center gap-xxs text-sm text-text-link hover:underline">
                 <img src={downloadIcon} alt="" className="h-4 w-4" />
                 Download Proof of Payment
               </button>
             </div>
 
+            <div className="flex flex-col gap-md p-md">
             <div className="grid grid-cols-2 gap-x-xl gap-y-md text-sm">
               <div className="flex flex-col gap-xxs">
                 <span className="text-label-gray">Vendor</span>
@@ -115,11 +116,11 @@ export function PaymentDetailsModal({
               <span className="text-sm font-semibold text-text-primary">Payment Breakdown</span>
               <div className="overflow-hidden rounded-sm border border-border-primary">
                 <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
-                  <div className="flex h-7 flex-1 items-center px-xs">Payment Method</div>
-                  <div className="flex h-7 flex-1 items-center px-xs">Check Number</div>
-                  <div className="flex h-7 flex-1 items-center px-xs">Payment Status</div>
-                  <div className="flex h-7 flex-1 items-center justify-end px-xs">Amount</div>
-                  <div className="flex h-7 flex-1 items-center px-xs">Posting Date</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Payment Method</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Check Number</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Payment Status</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center justify-end truncate px-xs">Amount</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Posting Date</div>
                   <div className="h-7 w-9 shrink-0" />
                 </div>
                 {payment.breakdown.map((row, i) => (
@@ -136,25 +137,30 @@ export function PaymentDetailsModal({
                 ))}
               </div>
             </div>
+            </div>
           </div>
 
-          <div className="flex flex-1 flex-col gap-xs">
-            <span className="border-b border-brand-blue pb-xxs text-sm font-semibold text-text-primary">Payment History</span>
-            <div className="overflow-hidden rounded-sm border border-border-primary">
-              <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
-                <div className="flex h-7 flex-[1.2_0_0] items-center px-xs">Description</div>
-                <div className="flex h-7 flex-[1.4_0_0] items-center px-xs">Comment</div>
-                <div className="flex h-7 flex-1 items-center px-xs">User</div>
-                <div className="flex h-7 flex-[1.2_0_0] items-center px-xs">Time</div>
-              </div>
-              {payment.history.map((row, i) => (
-                <div key={i} className="flex h-9 items-center border-t border-border-primary bg-white">
-                  <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.description}</div>
-                  <div className="flex-[1.4_0_0] truncate px-xs text-sm text-text-primary">{row.comment}</div>
-                  <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.user}</div>
-                  <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.time}</div>
+          <div className="flex min-w-[420px] flex-1 flex-col overflow-hidden rounded-sm border border-border-primary bg-white">
+            <div className="flex min-h-9 shrink-0 items-center border-b-2 border-brand-blue p-xs">
+              <span className="text-sm font-semibold text-text-secondary">Payment History</span>
+            </div>
+            <div className="p-md">
+              <div className="overflow-hidden rounded-sm border border-border-primary">
+                <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
+                  <div className="flex h-7 min-w-0 flex-[1.2_0_0] items-center truncate px-xs">Description</div>
+                  <div className="flex h-7 min-w-0 flex-[1.4_0_0] items-center truncate px-xs">Comment</div>
+                  <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">User</div>
+                  <div className="flex h-7 min-w-0 flex-[1.2_0_0] items-center truncate px-xs">Time</div>
                 </div>
-              ))}
+                {payment.history.map((row, i) => (
+                  <div key={i} className="flex h-9 items-center border-t border-border-primary bg-white">
+                    <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.description}</div>
+                    <div className="flex-[1.4_0_0] truncate px-xs text-sm text-text-primary">{row.comment}</div>
+                    <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.user}</div>
+                    <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.time}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

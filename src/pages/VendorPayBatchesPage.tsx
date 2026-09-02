@@ -107,12 +107,12 @@ export function VendorPayBatchesPage() {
         <div className="mt-md flex-1 overflow-x-auto rounded-sm border border-border-primary bg-white">
           <div className="min-w-[1100px]">
             <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
-              <div className="flex h-7 flex-1 items-center px-xs">Batch ID</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Payment Count</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Created By</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Date Created</div>
-              <div className="flex h-7 flex-1 items-center justify-end px-xs">Amount</div>
-              <div className="flex h-7 w-[160px] shrink-0 items-center px-xs">Status</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Batch ID</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Payment Count</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Created By</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Date Created</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center justify-end truncate px-xs">Amount</div>
+              <div className="flex h-7 w-[160px] shrink-0 items-center truncate px-xs">Status</div>
               <div className="h-7 w-9 shrink-0" />
             </div>
 

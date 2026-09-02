@@ -43,7 +43,7 @@ export interface Batch {
   payments: BatchPayment[]
 }
 
-export const ASSOCIATED_BILL_OPTIONS = ["Disconnect Bills"]
+export const ASSOCIATED_BILL_OPTIONS = ["Disconnect Bills", "Void Bills", "Delete Bills"]
 
 let seq = 0
 function nextSeq() {

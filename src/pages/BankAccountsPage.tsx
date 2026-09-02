@@ -183,13 +183,13 @@ export function BankAccountsPage() {
         <div className="mt-md flex-1 overflow-x-auto rounded-sm border border-border-primary bg-white">
           <div className="min-w-[1100px]">
             <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
-              <div className="flex h-7 w-[68px] shrink-0 items-center justify-center px-xs">Enabled</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Bank Account</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Routing Number</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Account Number</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Owner Name</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Owner Type</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Payer Name</div>
+              <div className="flex h-7 w-[68px] shrink-0 items-center justify-center truncate px-xs">Enabled</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Bank Account</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Routing Number</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Account Number</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Owner Name</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Owner Type</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Payer Name</div>
               <div className="h-7 w-9 shrink-0" />
             </div>
 

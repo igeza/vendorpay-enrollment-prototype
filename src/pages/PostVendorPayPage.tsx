@@ -89,12 +89,12 @@ export function PostVendorPayPage() {
                   )}
                 </span>
               </div>
-              <div className="flex h-7 w-[110px] shrink-0 items-center px-xs">Date</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Vendor</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Bank Account</div>
-              <div className="flex h-7 w-[140px] shrink-0 items-center px-xs">Memo</div>
-              <div className="flex h-7 w-[140px] shrink-0 items-center px-xs">Check No.</div>
-              <div className="flex h-7 w-[140px] shrink-0 items-center justify-end px-xs">Amount</div>
+              <div className="flex h-7 w-[110px] shrink-0 items-center truncate px-xs">Date</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Vendor</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Bank Account</div>
+              <div className="flex h-7 w-[140px] shrink-0 items-center truncate px-xs">Memo</div>
+              <div className="flex h-7 w-[140px] shrink-0 items-center truncate px-xs">Check No.</div>
+              <div className="flex h-7 w-[140px] shrink-0 items-center justify-end truncate px-xs">Amount</div>
             </div>
 
             {visiblePayments.map((p) => (

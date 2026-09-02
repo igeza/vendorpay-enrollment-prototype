@@ -145,16 +145,16 @@ export function PayBillsPage() {
                 Pay
               </div>
               <div className="flex h-7 w-10 shrink-0 items-center justify-center px-xs" />
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Invoice #</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Vendor</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Bank</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Bill Date</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Due Date</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end px-xs`}>Amount</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end px-xs`}>Amount Due</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end px-xs`}>Amount To Pay</div>
-              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center px-xs`}>Pay Method</div>
-              <div className="flex h-7 w-[116px] shrink-0 items-center justify-center px-xs">Has Credit</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Invoice #</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Vendor</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Bank</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Bill Date</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Due Date</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end truncate px-xs`}>Amount</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end truncate px-xs`}>Amount Due</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center justify-end truncate px-xs`}>Amount To Pay</div>
+              <div className={`flex h-7 ${COL_WIDE} shrink-0 items-center truncate px-xs`}>Pay Method</div>
+              <div className="flex h-7 w-[116px] shrink-0 items-center justify-center truncate px-xs">Has Credit</div>
               <div className="flex h-7 w-[52px] shrink-0 items-center justify-center px-xs">
                 <img src={viewColumnIcon} alt="Columns" className="h-5 w-5" />
               </div>
