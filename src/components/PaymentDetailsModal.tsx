@@ -42,6 +42,14 @@ export function PaymentDetailsModal({
 
   const isVoided = payment.status === "Voided"
 
+  function handleVoidClick() {
+    if (payment.status === "Processing") {
+      setShowConfirmVoid(true)
+    } else {
+      setShowVoidWarning(true)
+    }
+  }
+
   function handleAcceptVoid(reversalDate: string) {
     voidPayment(batchId, payment.id, reversalDate)
     setShowConfirmVoid(false)
@@ -175,7 +183,7 @@ export function PaymentDetailsModal({
             </>
           ) : (
             <>
-              <Button variant="primary" onClick={() => setShowVoidWarning(true)}>
+              <Button variant="primary" onClick={handleVoidClick}>
                 Void Payment
               </Button>
               <Button variant="secondary" onClick={onClose}>

@@ -16,8 +16,8 @@ export function RMXBackground() {
       <img
         src={backgroundPattern}
         alt=""
-        className="absolute left-1/2 top-0 max-w-none -translate-x-1/2"
-        style={{ width: PATTERN_WIDTH, height: PATTERN_HEIGHT }}
+        className="absolute left-1/2 top-0 -translate-x-1/2"
+        style={{ width: PATTERN_WIDTH, height: PATTERN_HEIGHT, maxWidth: "none" }}
       />
     </div>
   )
