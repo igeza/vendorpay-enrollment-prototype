@@ -27,7 +27,7 @@ export function Dropdown({
   options,
   value,
   onChange,
-  placeholder = "Select…",
+  placeholder = "",
   disabled,
   className,
   labelIcon,

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
+import { useNavigate } from "react-router-dom"
 import { AppHeader } from "../components/AppHeader"
 import { ResourceGuideModal } from "../components/ResourceGuideModal"
 import { BankAccountDetailsModal, type BankAccountRecord } from "../components/BankAccountDetailsModal"
@@ -93,6 +94,7 @@ function KebabMenu({ enabled, onToggleEnabled }: { enabled: boolean; onToggleEna
 }
 
 export function BankAccountsPage() {
+  const navigate = useNavigate()
   const [banks, setBanks] = useState(INITIAL_BANK_ACCOUNTS)
   const [query, setQuery] = useState("")
   const [showDisabled, setShowDisabled] = useState(false)
@@ -119,7 +121,7 @@ export function BankAccountsPage() {
   const editingRecord = banks.find((b) => b.bankName === editingBank)
 
   return (
-    <div className="min-h-screen bg-[#f3f4f8]">
+    <div className="flex min-h-screen flex-col bg-[#f3f4f8]">
       <AppHeader />
       <div className="flex h-10 items-center justify-between bg-brand-blue px-md py-xs text-white">
         <div className="flex items-center gap-sm">
@@ -130,6 +132,9 @@ export function BankAccountsPage() {
           </span>
         </div>
         <div className="flex items-center gap-md">
+          <button type="button" onClick={() => navigate("/pay-bills")} className="text-sm text-white hover:underline">
+            Pay Bills
+          </button>
           <button type="button" onClick={() => setShowResourceGuide(true)} className="text-sm text-white hover:underline">
             Resource Guide
           </button>
@@ -142,7 +147,7 @@ export function BankAccountsPage() {
         </div>
       </div>
 
-      <div className="p-md">
+      <div className="flex min-h-0 flex-1 flex-col p-md">
         <div className="flex items-center justify-between">
           <div className="relative w-[248px]">
             <img src={searchIcon} alt="" className="pointer-events-none absolute left-sm top-1/2 h-5 w-5 -translate-y-1/2" />
@@ -180,7 +185,7 @@ export function BankAccountsPage() {
           </button>
         </div>
 
-        <div className="mt-md overflow-x-auto rounded-sm border border-border-primary bg-white">
+        <div className="mt-md flex-1 overflow-x-auto bg-white">
           <div className="min-w-[1100px]">
             <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
               <div className="flex h-7 w-[68px] shrink-0 items-center justify-center px-xs">Enabled</div>

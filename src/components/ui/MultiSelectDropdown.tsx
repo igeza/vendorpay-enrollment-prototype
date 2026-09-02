@@ -29,7 +29,7 @@ export function MultiSelectDropdown({
   options,
   values,
   onChange,
-  placeholder = "Select…",
+  placeholder = "",
   disabled,
   className,
   size = "default",
