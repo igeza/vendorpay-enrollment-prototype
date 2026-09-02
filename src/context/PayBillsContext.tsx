@@ -7,10 +7,12 @@ import {
   type UnpaidBill,
   type VendorPayPayment,
 } from "../types/payBills"
+import { SEED_BATCHES, makeBatchPayment, nextBatchId, type Batch } from "../types/batches"
 
 interface PayBillsContextValue {
   bills: UnpaidBill[]
   vendorPayQueue: VendorPayPayment[]
+  batches: Batch[]
   toggleBillSelected: (id: string) => void
   toggleAllBills: (selected: boolean) => void
   updateBill: <K extends keyof UnpaidBill>(id: string, key: K, value: UnpaidBill[K]) => void
@@ -18,6 +20,7 @@ interface PayBillsContextValue {
   toggleVendorPaymentSelected: (id: string) => void
   toggleAllVendorPayments: (selected: boolean) => void
   postVendorPayments: () => void
+  voidPayment: (batchId: string, paymentId: string, reversalDate: string) => void
 }
 
 const PayBillsContext = createContext<PayBillsContextValue | null>(null)
@@ -37,9 +40,27 @@ function formatMMDDYY(isoDate: string) {
   return `${m}/${d}/${y.slice(2)}`
 }
 
+function todayMMDDYYYY() {
+  const d = new Date()
+  return `${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getDate().toString().padStart(2, "0")}/${d.getFullYear()}`
+}
+
+function nowTimeString() {
+  const d = new Date()
+  const mm = (d.getMonth() + 1).toString().padStart(2, "0")
+  const dd = d.getDate().toString().padStart(2, "0")
+  const yy = (d.getFullYear() % 100).toString().padStart(2, "0")
+  let hours = d.getHours()
+  const minutes = d.getMinutes().toString().padStart(2, "0")
+  const ampm = hours >= 12 ? "pm" : "am"
+  hours = hours % 12 || 12
+  return `${mm}/${dd}/${yy} ${hours}:${minutes} ${ampm}`
+}
+
 export function PayBillsProvider({ children }: { children: ReactNode }) {
   const [bills, setBills] = useState<UnpaidBill[]>(SEED_UNPAID_BILLS)
   const [vendorPayQueue, setVendorPayQueue] = useState<VendorPayPayment[]>([])
+  const [batches, setBatches] = useState<Batch[]>(SEED_BATCHES)
 
   function toggleBillSelected(id: string) {
     setBills((prev) => prev.map((b) => (b.id === id ? { ...b, selected: !b.selected } : b)))
@@ -81,7 +102,55 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
   }
 
   function postVendorPayments() {
+    const posted = vendorPayQueue.filter((p) => p.selected)
+
+    if (posted.length > 0) {
+      const newBatch: Batch = {
+        id: nextBatchId(),
+        createdBy: "mgarcia",
+        dateCreated: todayMMDDYYYY(),
+        status: "Processing",
+        payments: posted.map((p) =>
+          makeBatchPayment({
+            vendor: p.vendor,
+            amount: p.amount,
+            bank: p.bankAccount,
+            datePosted: p.date,
+            checkNo: p.checkNo,
+            bankAccount: p.bankAccount,
+          }),
+        ),
+      }
+      setBatches((prev) => [newBatch, ...prev])
+    }
+
     setVendorPayQueue((prev) => prev.filter((p) => !p.selected))
+  }
+
+  function voidPayment(batchId: string, paymentId: string, reversalDate: string) {
+    setBatches((prev) =>
+      prev.map((batch) =>
+        batch.id !== batchId
+          ? batch
+          : {
+              ...batch,
+              payments: batch.payments.map((p) =>
+                p.id !== paymentId
+                  ? p
+                  : {
+                      ...p,
+                      status: "Voided",
+                      voidedOn: reversalDate,
+                      breakdown: p.breakdown.map((row) => ({ ...row, status: "Voided" })),
+                      history: [
+                        ...p.history,
+                        { description: "Payment Voided", comment: "Voided", user: "mgarcia", time: nowTimeString() },
+                      ],
+                    },
+              ),
+            },
+      ),
+    )
   }
 
   return (
@@ -89,6 +158,7 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
       value={{
         bills,
         vendorPayQueue,
+        batches,
         toggleBillSelected,
         toggleAllBills,
         updateBill,
@@ -96,6 +166,7 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
         toggleVendorPaymentSelected,
         toggleAllVendorPayments,
         postVendorPayments,
+        voidPayment,
       }}
     >
       {children}

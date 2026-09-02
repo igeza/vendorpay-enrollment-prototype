@@ -1,5 +1,5 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="calculate">
-<path id="Shape" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4.5 8H15v-2h2.5v2zm0-4H15v-2h2.5v2zm0-4H15V7h2.5v2z" fill="#666666"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="calculator">
+<path id="Vector" d="M2.5 0V20H17.5V0H2.5ZM7.5 18.3331H4.16687V15.8331H7.5V18.3331ZM7.5 15H4.16687V12.5H7.5V15ZM7.5 11.6669H4.16687V9.16687H7.5V11.6669ZM11.6669 18.3331H8.33375V15.8331H11.6669V18.3331ZM11.6669 15H8.33375V12.5H11.6669V15ZM11.6669 11.6669H8.33375V9.16687H11.6669V11.6669ZM15.8331 18.3331H12.5V12.5H15.8331V18.3331ZM15.8331 11.6669H12.5V9.16687H15.8331V11.6669ZM15.8331 6.66687H4.16625V1.66688H15.8331V6.66687ZM15 5.83313H5V2.5H15V5.83313Z" fill="#666666"/>
 </g>
 </svg>

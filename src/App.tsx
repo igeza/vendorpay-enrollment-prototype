@@ -12,6 +12,7 @@ import { NextStepsPage } from "./pages/wizard/NextStepsPage"
 import { BankAccountsPage } from "./pages/BankAccountsPage"
 import { PayBillsPage } from "./pages/PayBillsPage"
 import { PostVendorPayPage } from "./pages/PostVendorPayPage"
+import { VendorPayBatchesPage } from "./pages/VendorPayBatchesPage"
 
 function EnrollLayout() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/bank-accounts" element={<BankAccountsPage />} />
             <Route path="/pay-bills" element={<PayBillsPage />} />
             <Route path="/post-vendorpay" element={<PostVendorPayPage />} />
+            <Route path="/vendorpay-batches" element={<VendorPayBatchesPage />} />
             <Route element={<EnrollLayout />}>
               <Route path="/enroll/company-info" element={<CompanyInfoPage />} />
               <Route path="/enroll/control-person" element={<ControlPersonPage />} />

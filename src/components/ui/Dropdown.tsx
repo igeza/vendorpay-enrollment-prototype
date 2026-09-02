@@ -91,7 +91,7 @@ export function Dropdown({
         </button>
 
         {open && !disabled && (
-          <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 max-h-64 overflow-y-auto rounded-sm bg-white shadow-[0px_3px_6px_0px_rgba(0,0,0,0.15)]">
+          <div className="absolute left-0 top-[calc(100%+4px)] z-50 max-h-64 w-max min-w-full max-w-[320px] overflow-y-auto rounded-sm bg-white shadow-[0px_3px_6px_0px_rgba(0,0,0,0.15)]">
             {options.map((opt) => (
               <button
                 key={opt}
@@ -101,7 +101,7 @@ export function Dropdown({
                   setOpen(false)
                 }}
                 className={clsx(
-                  "flex h-9 w-full items-center px-sm text-left text-sm",
+                  "flex h-9 w-full items-center truncate whitespace-nowrap px-sm text-left text-sm",
                   opt === value ? "bg-brand-blue text-white" : "text-text-primary hover:bg-[#f5f8fa]",
                 )}
               >

@@ -1,0 +1,202 @@
+import { useState } from "react"
+import clsx from "clsx"
+import { Button } from "./ui/Button"
+import { VoidPaymentPopup } from "./VoidPaymentPopup"
+import { ConfirmVoidPopup } from "./ConfirmVoidPopup"
+import { usePayBills } from "../context/PayBillsContext"
+import type { BatchPayment } from "../types/batches"
+import closeIcon from "../assets/splash/shell/overlay-close-icon.svg"
+import downloadIcon from "../assets/pay-bills/icon-download.svg"
+import moreVertIcon from "../assets/bank-accounts/icon-more-vert.svg"
+
+function formatMoney(n: number) {
+  return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
+function StatusLozenge({ status }: { status: string }) {
+  const voided = status === "Voided"
+  return (
+    <span
+      className={clsx(
+        "flex h-6 shrink-0 items-center rounded-sm px-xs text-sm text-text-secondary",
+        voided ? "bg-error-bg" : "bg-warning-bg",
+      )}
+    >
+      {status}
+    </span>
+  )
+}
+
+export function PaymentDetailsModal({
+  batchId,
+  payment,
+  onClose,
+}: {
+  batchId: string
+  payment: BatchPayment
+  onClose: () => void
+}) {
+  const { voidPayment } = usePayBills()
+  const [showVoidWarning, setShowVoidWarning] = useState(false)
+  const [showConfirmVoid, setShowConfirmVoid] = useState(false)
+
+  const isVoided = payment.status === "Voided"
+
+  function handleAcceptVoid(reversalDate: string) {
+    voidPayment(batchId, payment.id, reversalDate)
+    setShowConfirmVoid(false)
+  }
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(76,76,76,0.5)]">
+      <div className="flex max-h-[90vh] w-[1180px] flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
+        <header className="flex h-12 shrink-0 items-center gap-sm border-b border-border-primary px-md py-xs">
+          <h1 className="text-[20px] leading-[28px] font-normal text-text-secondary">Payment Details</h1>
+          <StatusLozenge status={payment.status} />
+          <button type="button" aria-label="Close" className="ml-auto opacity-70 hover:opacity-100" onClick={onClose}>
+            <img src={closeIcon} alt="" className="h-6 w-6" />
+          </button>
+        </header>
+
+        <div className="flex flex-1 gap-md overflow-y-auto p-md">
+          <div className="flex flex-1 flex-col gap-md">
+            <div className="flex items-center justify-between border-b border-brand-blue pb-xxs">
+              <span className="text-sm font-semibold text-text-primary">Payment Details</span>
+              <button type="button" className="flex items-center gap-xxs text-sm text-text-link hover:underline">
+                <img src={downloadIcon} alt="" className="h-4 w-4" />
+                Download Proof of Payment
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-x-xl gap-y-md text-sm">
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Vendor</span>
+                <span className="font-semibold text-text-link">{payment.vendor}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Total Amount</span>
+                <span className="font-semibold text-text-secondary">{formatMoney(payment.amount)}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Bank Account</span>
+                <span className="font-semibold text-text-secondary">{payment.bankAccount}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Status</span>
+                <span className={clsx("font-semibold", isVoided ? "text-error" : "text-text-secondary")}>{payment.status}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Entry ID</span>
+                <span className="font-semibold text-text-secondary">{payment.entryId}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Vendor ID</span>
+                <span className="font-semibold text-text-secondary">{payment.vendorId}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Invoice ID</span>
+                <span className="font-semibold text-text-link">{payment.invoiceId}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Invoice Date</span>
+                <span className="font-semibold text-text-secondary">{payment.invoiceDate}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Invoice Amount</span>
+                <span className="font-semibold text-text-secondary">{formatMoney(payment.invoiceAmount)}</span>
+              </div>
+              <div className="flex flex-col gap-xxs">
+                <span className="text-label-gray">Discount</span>
+                <span className="font-semibold text-text-secondary">{formatMoney(payment.discount)}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-xs">
+              <span className="text-sm font-semibold text-text-primary">Payment Breakdown</span>
+              <div className="overflow-hidden rounded-sm border border-border-primary">
+                <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
+                  <div className="flex h-7 flex-1 items-center px-xs">Payment Method</div>
+                  <div className="flex h-7 flex-1 items-center px-xs">Check Number</div>
+                  <div className="flex h-7 flex-1 items-center px-xs">Payment Status</div>
+                  <div className="flex h-7 flex-1 items-center justify-end px-xs">Amount</div>
+                  <div className="flex h-7 flex-1 items-center px-xs">Posting Date</div>
+                  <div className="h-7 w-9 shrink-0" />
+                </div>
+                {payment.breakdown.map((row, i) => (
+                  <div key={i} className="flex h-9 items-center border-t border-border-primary bg-white">
+                    <div className="flex-1 truncate px-xs text-sm text-text-primary">Check</div>
+                    <div className="flex-1 truncate px-xs text-sm text-text-link">{row.checkNumber}</div>
+                    <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.status}</div>
+                    <div className="flex-1 truncate px-xs text-right text-sm text-text-primary">{formatMoney(row.amount)}</div>
+                    <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.postingDate}</div>
+                    <div className="flex w-9 shrink-0 items-center justify-center px-xs">
+                      <img src={moreVertIcon} alt="" className="h-5 w-5" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-1 flex-col gap-xs">
+            <span className="border-b border-brand-blue pb-xxs text-sm font-semibold text-text-primary">Payment History</span>
+            <div className="overflow-hidden rounded-sm border border-border-primary">
+              <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
+                <div className="flex h-7 flex-[1.2_0_0] items-center px-xs">Description</div>
+                <div className="flex h-7 flex-[1.4_0_0] items-center px-xs">Comment</div>
+                <div className="flex h-7 flex-1 items-center px-xs">User</div>
+                <div className="flex h-7 flex-[1.2_0_0] items-center px-xs">Time</div>
+              </div>
+              {payment.history.map((row, i) => (
+                <div key={i} className="flex h-9 items-center border-t border-border-primary bg-white">
+                  <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.description}</div>
+                  <div className="flex-[1.4_0_0] truncate px-xs text-sm text-text-primary">{row.comment}</div>
+                  <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.user}</div>
+                  <div className="flex-[1.2_0_0] truncate px-xs text-sm text-text-primary">{row.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <footer className="flex shrink-0 items-center justify-end gap-md border-t border-border-primary bg-input-fill px-md py-xs">
+          {isVoided ? (
+            <>
+              <span className="text-sm text-error">Voided on {payment.voidedOn}</span>
+              <Button variant="secondary" onClick={onClose}>
+                Close
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="primary" onClick={() => setShowVoidWarning(true)}>
+                Void Payment
+              </Button>
+              <Button variant="secondary" onClick={onClose}>
+                Close
+              </Button>
+            </>
+          )}
+        </footer>
+      </div>
+
+      {showVoidWarning && (
+        <VoidPaymentPopup
+          onClose={() => setShowVoidWarning(false)}
+          onConfirm={() => {
+            setShowVoidWarning(false)
+            setShowConfirmVoid(true)
+          }}
+        />
+      )}
+      {showConfirmVoid && (
+        <ConfirmVoidPopup
+          date={payment.datePosted}
+          amount={payment.amount}
+          onClose={() => setShowConfirmVoid(false)}
+          onAccept={handleAcceptVoid}
+        />
+      )}
+    </div>
+  )
+}

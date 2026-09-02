@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { AppHeader } from "../components/AppHeader"
 import { Checkbox } from "../components/ui/Controls"
 import { SuccessToast } from "../components/SuccessToast"
@@ -15,7 +14,6 @@ function formatMoney(n: number) {
 }
 
 export function PostVendorPayPage() {
-  const navigate = useNavigate()
   const { vendorPayQueue, toggleVendorPaymentSelected, toggleAllVendorPayments, postVendorPayments } = usePayBills()
   const [query, setQuery] = useState("")
   const [toast, setToast] = useState<string | null>(null)
@@ -32,9 +30,9 @@ export function PostVendorPayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f8]">
+    <div className="flex min-h-screen flex-col bg-[#f3f4f8]">
       <AppHeader />
-      <div className="relative flex h-10 items-center justify-between bg-brand-blue px-md py-xs text-white">
+      <div className="relative flex h-10 shrink-0 items-center justify-between bg-brand-blue px-md py-xs text-white">
         <div className="flex items-center gap-sm">
           <span className="text-lg">Post VendorPay</span>
           <span className="flex items-center gap-xxxs rounded-sm bg-[#cce8f7] px-xxs py-xxxs text-xs italic text-brand-navy">
@@ -57,9 +55,9 @@ export function PostVendorPayPage() {
         {toast && <SuccessToast message={toast} />}
       </div>
 
-      <div className="p-md">
-        <div className="flex flex-col gap-xxs">
-          <span className="text-sm font-normal text-label-gray">Search</span>
+      <div className="flex min-h-0 flex-1 flex-col p-md pb-0">
+        <div className="flex shrink-0 flex-col gap-xxs">
+          <span className="text-sm font-normal text-text-link">Search</span>
           <div className="relative w-[248px]">
             <img src={searchIcon} alt="" className="pointer-events-none absolute left-sm top-1/2 h-5 w-5 -translate-y-1/2" />
             <input
@@ -71,7 +69,7 @@ export function PostVendorPayPage() {
           </div>
         </div>
 
-        <div className="mt-md overflow-x-auto rounded-sm border border-border-primary bg-white">
+        <div className="mt-md flex-1 overflow-x-auto rounded-sm border border-border-primary bg-white">
           <div className="min-w-[1100px]">
             <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
               <div className="flex h-7 w-[40px] shrink-0 items-center justify-center px-xs">
@@ -118,26 +116,22 @@ export function PostVendorPayPage() {
             )}
           </div>
         </div>
+      </div>
 
-        <div className="mt-md flex items-center justify-between border-t border-border-primary pt-sm">
-          <div className="flex items-center gap-2xl text-xs text-[#b3b3b3]">
-            <span>
-              {selectedPayments.length} of {vendorPayQueue.length} Payments Selected
-            </span>
-            <span>Total Amount: {formatMoney(totalAmount)}</span>
-          </div>
-          <button
-            type="button"
-            disabled={selectedPayments.length === 0}
-            onClick={handlePost}
-            className="flex h-9 shrink-0 items-center rounded-sm bg-brand-blue px-lg text-sm text-white hover:bg-hover-primary disabled:cursor-not-allowed disabled:bg-brand-blue/50"
-          >
-            Post
-          </button>
+      <div className="mt-md flex shrink-0 items-center justify-end gap-2xl border-t border-border-primary bg-input-fill px-md py-xs">
+        <div className="flex items-center gap-2xl text-xs text-[#b3b3b3]">
+          <span>
+            {selectedPayments.length} of {vendorPayQueue.length} Payments Selected
+          </span>
+          <span>Total Amount: {formatMoney(totalAmount)}</span>
         </div>
-
-        <button type="button" onClick={() => navigate("/pay-bills")} className="mt-sm text-sm text-text-link hover:underline">
-          ← Pay Bills
+        <button
+          type="button"
+          disabled={selectedPayments.length === 0}
+          onClick={handlePost}
+          className="flex h-9 shrink-0 items-center rounded-sm bg-brand-blue px-lg text-sm text-white hover:bg-hover-primary disabled:cursor-not-allowed disabled:bg-brand-blue/50"
+        >
+          Post
         </button>
       </div>
     </div>

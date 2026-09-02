@@ -1,4 +1,4 @@
-export type PayMethod = "VendorPay" | "Check"
+export type PayMethod = "Check" | "Debit" | "EFT" | "ePay" | "VendorPay"
 
 export interface UnpaidBill {
   id: string
@@ -34,9 +34,19 @@ export interface PaymentInfo {
   markChecksToBePrinted: boolean
 }
 
-export const BANK_OPTIONS = ["1000 Fifth Third", "1009 Sun Trust", "1015 US Bank"]
+export const BANK_OPTIONS = [
+  "<Property Default>",
+  "1000 Fifth Third",
+  "1001 PNC Bank",
+  "1002 Huntington Bank",
+  "1009 Sun Trust",
+  "1010 Wells Fargo",
+  "1015 US Bank",
+  "1016 First National Bank",
+  "1017 Bank of America",
+]
 
-export const PAY_METHOD_OPTIONS: PayMethod[] = ["VendorPay", "Check"]
+export const PAY_METHOD_OPTIONS: PayMethod[] = ["Check", "Debit", "EFT", "ePay", "VendorPay"]
 
 export const BANK_ACCOUNT_OPTIONS = [
   "1000 Chase Bank",
@@ -65,7 +75,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 550.24,
     amountToPay: 550.24,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-2",
@@ -79,7 +89,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 102.5,
     amountToPay: 102.5,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-3",
@@ -93,7 +103,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 120.99,
     amountToPay: 120.99,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-4",
@@ -107,7 +117,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 59.88,
     amountToPay: 59.88,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-5",
@@ -121,7 +131,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 45.67,
     amountToPay: 45.67,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-6",
@@ -135,7 +145,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 135.0,
     amountToPay: 135.0,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-7",
@@ -149,7 +159,7 @@ export const SEED_UNPAID_BILLS: UnpaidBill[] = [
     amountDue: 68.75,
     amountToPay: 68.75,
     payMethod: "VendorPay",
-    selected: true,
+    selected: false,
   },
   {
     id: "bill-8",
