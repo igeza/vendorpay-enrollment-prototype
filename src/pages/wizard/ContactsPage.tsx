@@ -7,6 +7,7 @@ import { CONTACT_ROLES, CONTACT_ROLE_DESCRIPTIONS, makeId, type Contact, type Co
 import addIcon from "../../assets/contacts/add-icon.svg"
 import checkCircleDone from "../../assets/contacts/check-circle-filled-done.svg"
 import checkCirclePending from "../../assets/contacts/check-circle-filled-pending.svg"
+import deleteIcon from "../../assets/beneficial-owners/delete-filled.svg"
 
 const ROLE_OPTIONS = CONTACT_ROLES.map((role) => ({ value: role, description: CONTACT_ROLE_DESCRIPTIONS[role] }))
 
@@ -185,14 +186,11 @@ export function ContactsPage() {
                   />
                 </div>
                 <div className="flex items-center justify-center">
-                  <button
-                    type="button"
-                    aria-label="Remove contact"
-                    onClick={() => removeContact(c.id)}
-                    className="text-text-secondary hover:text-error"
-                  >
-                    ✕
-                  </button>
+                  {contacts.length > 1 && (
+                    <button type="button" aria-label="Remove contact" onClick={() => removeContact(c.id)}>
+                      <img src={deleteIcon} alt="" className="h-5 w-5" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

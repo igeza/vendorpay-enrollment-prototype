@@ -78,12 +78,12 @@ export function PostVendorPayPage() {
                   aria-checked={allSelected}
                   onClick={() => toggleAllVendorPayments(!allSelected)}
                   className={
-                    "flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-xs border-2 " +
+                    "flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-xs border-2 " +
                     (allSelected ? "border-brand-orange bg-brand-orange" : "border-white bg-transparent")
                   }
                 >
                   {allSelected && (
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                   )}

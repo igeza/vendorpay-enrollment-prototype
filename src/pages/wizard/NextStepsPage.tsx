@@ -4,6 +4,7 @@ import { WizardShell } from "../../components/WizardShell"
 import { ManageExceptionsModal } from "../../components/ManageExceptionsModal"
 import { ConfigurePrivilegesModal } from "../../components/ConfigurePrivilegesModal"
 import { useWizard } from "../../context/WizardContext"
+import { initialWizardState } from "../../types"
 import iconVendors from "../../assets/next-steps/icon-update-vendor-payment-methods.svg"
 import iconTeam from "../../assets/next-steps/icon-enable-team-members.svg"
 import iconPayBills from "../../assets/next-steps/icon-pay-bills.svg"
@@ -46,13 +47,13 @@ const TIPS = [
 ]
 
 export function NextStepsPage() {
-  const { reset } = useWizard()
+  const { update } = useWizard()
   const navigate = useNavigate()
   const [showManageExceptions, setShowManageExceptions] = useState(false)
   const [showConfigurePrivileges, setShowConfigurePrivileges] = useState(false)
 
   function finish() {
-    reset()
+    update({ ...initialWizardState, enrollmentComplete: true })
     navigate("/bank-accounts")
   }
 

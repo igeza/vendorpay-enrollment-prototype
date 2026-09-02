@@ -1,5 +1,6 @@
-import { HashRouter, Routes, Route, Outlet } from "react-router-dom"
-import { WizardProvider } from "./context/WizardContext"
+import type { ReactNode } from "react"
+import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
+import { WizardProvider, useWizard } from "./context/WizardContext"
 import { PayBillsProvider } from "./context/PayBillsContext"
 import { SplashPage } from "./pages/SplashPage"
 import { CompanyInfoPage } from "./pages/wizard/CompanyInfoPage"
@@ -23,6 +24,12 @@ function EnrollLayout() {
   )
 }
 
+/** Post VendorPay and VendorPay Batches only become reachable once enrollment has finished. */
+function RequireEnrollment({ children }: { children: ReactNode }) {
+  const { state } = useWizard()
+  return state.enrollmentComplete ? <>{children}</> : <Navigate to="/" replace />
+}
+
 export default function App() {
   return (
     <WizardProvider>
@@ -32,8 +39,22 @@ export default function App() {
             <Route path="/" element={<SplashPage />} />
             <Route path="/bank-accounts" element={<BankAccountsPage />} />
             <Route path="/pay-bills" element={<PayBillsPage />} />
-            <Route path="/post-vendorpay" element={<PostVendorPayPage />} />
-            <Route path="/vendorpay-batches" element={<VendorPayBatchesPage />} />
+            <Route
+              path="/post-vendorpay"
+              element={
+                <RequireEnrollment>
+                  <PostVendorPayPage />
+                </RequireEnrollment>
+              }
+            />
+            <Route
+              path="/vendorpay-batches"
+              element={
+                <RequireEnrollment>
+                  <VendorPayBatchesPage />
+                </RequireEnrollment>
+              }
+            />
             <Route element={<EnrollLayout />}>
               <Route path="/enroll/company-info" element={<CompanyInfoPage />} />
               <Route path="/enroll/control-person" element={<ControlPersonPage />} />

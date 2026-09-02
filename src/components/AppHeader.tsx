@@ -8,16 +8,23 @@ import favoritesIcon from "../assets/shell/favorites-grade.svg"
 import searchIcon from "../assets/shell/search.svg"
 import notificationsIcon from "../assets/shell/notifications.svg"
 import { NavMenu } from "./NavMenu"
+import { useWizard } from "../context/WizardContext"
 
 /** The 48px navy app header that sits atop every Express page — logo, Command Launch, company code, bell, avatar. */
 export function AppHeader() {
   const navigate = useNavigate()
+  const { reset } = useWizard()
   const [showMenu, setShowMenu] = useState(false)
+
+  function goHome() {
+    reset()
+    navigate("/")
+  }
 
   return (
     <header className="relative flex h-12 items-center bg-brand-navy px-md py-xs text-white">
       <div className="flex flex-1 items-center gap-md">
-        <button type="button" onClick={() => navigate("/")} aria-label="Rent Manager home">
+        <button type="button" onClick={goHome} aria-label="Rent Manager home">
           <img src={rmLogo} alt="Rent Manager" className="h-8 w-[175px]" />
         </button>
       </div>

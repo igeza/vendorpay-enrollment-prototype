@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
+import { useWizard } from "../context/WizardContext"
 import rmHouseLogo from "../assets/nav-menu/rm-house-logo.svg"
 import workspaceIcon from "../assets/nav-menu/icon-workspace.svg"
 import dashboardIcon from "../assets/nav-menu/icon-dashboard.svg"
@@ -128,6 +129,9 @@ const CATEGORIES: MenuCategory[] = [
   { key: "communication", label: "Communication", setupLabel: "Communication Setup", reportsLabel: "Communication Reports", columns: null },
 ]
 
+/** These links stay inert until enrollment is finished, matching Rent Manager's staged-rollout convention. */
+const REQUIRES_ENROLLMENT = new Set(["Post VendorPay", "VendorPay Batches"])
+
 const TOP_NAV_ITEMS = [
   { icon: workspaceIcon, label: "Workspace" },
   { icon: dashboardIcon, label: "Dashboard" },
@@ -139,6 +143,7 @@ const TOP_NAV_ITEMS = [
 
 export function NavMenu({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate()
+  const { state } = useWizard()
   const [selectedKey, setSelectedKey] = useState("rental-info")
 
   useEffect(() => {
@@ -217,22 +222,24 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
                       <span className="whitespace-nowrap text-sm font-semibold text-[#0071aa]">{col.title}</span>
                     </div>
                     <div className="flex flex-col gap-sm">
-                      {col.items.map((item) =>
-                        item.to ? (
-                          <button
-                            key={item.label}
-                            type="button"
-                            onClick={() => go(item)}
-                            className="whitespace-nowrap text-left text-sm text-text-secondary hover:text-brand-blue hover:underline"
-                          >
-                            {item.label}
-                          </button>
-                        ) : (
-                          <span key={item.label} className="whitespace-nowrap text-sm text-text-secondary">
-                            {item.label}
-                          </span>
-                        ),
-                      )}
+                      {col.items
+                        .filter((item) => !(REQUIRES_ENROLLMENT.has(item.label) && !state.enrollmentComplete))
+                        .map((item) =>
+                          item.to ? (
+                            <button
+                              key={item.label}
+                              type="button"
+                              onClick={() => go(item)}
+                              className="whitespace-nowrap text-left text-sm text-text-secondary hover:text-brand-blue hover:underline"
+                            >
+                              {item.label}
+                            </button>
+                          ) : (
+                            <span key={item.label} className="whitespace-nowrap text-sm text-text-secondary">
+                              {item.label}
+                            </span>
+                          ),
+                        )}
                     </div>
                   </div>
                 ))}
