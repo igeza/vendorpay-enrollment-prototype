@@ -30,6 +30,13 @@ function randomCheckNo() {
   return `RM${Math.floor(100000 + Math.random() * 900000)}`
 }
 
+function formatMMDDYY(isoDate: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate)
+  if (!match) return isoDate
+  const [, y, m, d] = match
+  return `${m}/${d}/${y.slice(2)}`
+}
+
 export function PayBillsProvider({ children }: { children: ReactNode }) {
   const [bills, setBills] = useState<UnpaidBill[]>(SEED_UNPAID_BILLS)
   const [vendorPayQueue, setVendorPayQueue] = useState<VendorPayPayment[]>([])
@@ -52,7 +59,7 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
 
     const newPayments: VendorPayPayment[] = vendorPayBills.map((b) => ({
       id: nextId("payment"),
-      date: info.paymentDate || b.dueDate,
+      date: info.paymentDate ? formatMMDDYY(info.paymentDate) : b.dueDate,
       vendor: b.vendor,
       bankAccount: info.bankOverride && info.bankOverride !== "<Use Bank/CC Assigned on Register>" ? info.bankOverride : randomBankAccount(),
       memo: info.comment || String(Math.floor(1000 + Math.random() * 9000)),
