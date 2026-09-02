@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap");
+
+@theme {
+  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand / semantic colors pulled from the VendorPay Figma variables */
+  --color-brand-blue: #008dd5;
+  --color-brand-navy: #13314c;
+  --color-brand-orange: #f79b4d;
+  --color-attention: #f58220;
+  --color-notice: #faa61c;
+
+  --color-text-primary: #13314c;
+  --color-text-secondary: #425a70;
+  --color-text-link: #008dd5;
+  --color-text-inverse: #ffffff;
+  /* RMX label/body gray — distinct from the darker slate used for secondary UI text above */
+  --color-label-gray: #666666;
+
+  --color-border-primary: #cedbe7;
+
+  --color-container-primary: #ffffff;
+  --color-container-secondary: #008dd5;
+
+  --color-icon-primary: #008dd5;
+  --color-icon-secondary: #ffffff;
+  --color-icon-tertiary: #666666;
+  --color-icon-inverse: #13314c;
+
+  --color-success: #6eb744;
+  --color-success-bg: #e2f1da;
+  --color-error: #eb343c;
+  --color-error-bg: #fbd6d8;
+  --color-warning-bg: #feedd2;
+
+  --spacing-xxxs: 2px;
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+  --spacing-5xl: 56px;
+  --spacing-6xl: 64px;
+  --spacing-9xl: 96px;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-round: 200px;
+
+  /* RMX component-specific tokens */
+  --color-input-fill: #f5f8fa;
+  --color-border-disabled: #ebf1f5;
+  --color-checkbox-checked: #f79b4d;
+  --color-hover-primary: #0071aa;
+  --color-hover-secondary: #ebf1f5;
+  --color-row-hover: #ebf1f5;
+
+  --shadow-dropshadow-md: 1px 2px 12px 1px rgba(76, 76, 76, 0.1), 0 4px 10px -10px rgba(76, 76, 76, 0.1),
+    0 -2px 20px -5px rgba(76, 76, 76, 0.08);
+  --shadow-dropshadow-lg: 1px 2px 12px 1px rgba(76, 76, 76, 0.14), 0 10px 10px -5px rgba(76, 76, 76, 0.15);
+}
+
+body {
+  background-color: #f3f4f8;
+  color: var(--color-text-primary);
+}
