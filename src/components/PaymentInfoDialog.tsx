@@ -26,7 +26,7 @@ export function PaymentInfoDialog({ onClose, onSave }: { onClose: () => void; on
       <div className="flex w-[534px] flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-primary px-md py-xs">
           <h1 className="text-[20px] leading-[28px] font-normal text-text-primary">Payment Info</h1>
-          <button type="button" aria-label="Close" className="opacity-70 hover:opacity-100" onClick={onClose}>
+          <button type="button" aria-label="Close" onClick={onClose}>
             <img src={closeIcon} alt="" className="h-6 w-6" />
           </button>
         </header>

@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, type ReactNode } from "react"
+import { type InputHTMLAttributes, type ReactNode, type Ref } from "react"
 import clsx from "clsx"
 
 interface FieldWrapProps {
@@ -34,6 +34,7 @@ type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   helperText?: string
   error?: string
   labelIcon?: ReactNode
+  ref?: Ref<HTMLInputElement>
 }
 
 export function TextField({ label, helperText, error, required, labelIcon, className, id, ...props }: TextFieldProps) {

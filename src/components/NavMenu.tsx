@@ -130,7 +130,7 @@ const CATEGORIES: MenuCategory[] = [
 ]
 
 /** These links stay inert until enrollment is finished, matching Rent Manager's staged-rollout convention. */
-const REQUIRES_ENROLLMENT = new Set(["Post VendorPay", "VendorPay Batches"])
+const REQUIRES_ENROLLMENT = new Set(["VendorPay Batches"])
 
 const TOP_NAV_ITEMS = [
   { icon: workspaceIcon, label: "Workspace" },
@@ -165,7 +165,7 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
   return createPortal(
     <>
       <div className="fixed inset-x-0 top-12 bottom-0 z-40 bg-[rgba(76,76,76,0.5)]" onClick={onClose} />
-      <div className="fixed left-2xl right-2xl top-16 z-50 overflow-hidden rounded-md border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
+      <div className="fixed left-2xl right-2xl top-16 z-50 mx-auto max-w-[1460px] overflow-hidden rounded-md border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <div className="relative flex flex-col border-b border-border-primary px-lg">
           <button type="button" aria-label="Close menu" onClick={onClose} className="absolute right-xs top-xs">
             <img src={closeIcon} alt="" className="h-6 w-6" />
@@ -230,7 +230,7 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
                               key={item.label}
                               type="button"
                               onClick={() => go(item)}
-                              className="whitespace-nowrap text-left text-sm text-text-secondary hover:text-brand-blue hover:underline"
+                              className="-mx-xs whitespace-nowrap rounded-sm px-xs py-xxs text-left text-sm text-text-secondary hover:bg-hover-secondary"
                             >
                               {item.label}
                             </button>

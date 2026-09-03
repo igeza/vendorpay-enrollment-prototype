@@ -61,7 +61,7 @@ export function PaymentDetailsModal({
         <header className="flex h-12 shrink-0 items-center gap-sm border-b border-border-primary px-md py-xs">
           <h1 className="text-[20px] leading-[28px] font-normal text-text-secondary">Payment Details</h1>
           <StatusLozenge status={payment.status} />
-          <button type="button" aria-label="Close" className="ml-auto opacity-70 hover:opacity-100" onClick={onClose}>
+          <button type="button" aria-label="Close" className="ml-auto" onClick={onClose}>
             <img src={closeIcon} alt="" className="h-6 w-6" />
           </button>
         </header>

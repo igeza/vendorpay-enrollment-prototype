@@ -37,12 +37,11 @@ export function WizardShell({
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(76,76,76,0.5)] p-xl">
       <div className="flex h-full max-h-[920px] w-full max-w-[1840px] flex-col overflow-hidden rounded-sm bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <header className="flex h-12 shrink-0 items-center justify-end gap-md border-b border-border-primary bg-white px-lg">
-          <button aria-label="Help" className="opacity-70 hover:opacity-100">
+          <button aria-label="Help">
             <img src={helpIcon} alt="" className="h-6 w-6" />
           </button>
           <button
             aria-label="Close"
-            className="opacity-70 hover:opacity-100"
             onClick={() => {
               reset()
               navigate("/")
@@ -68,7 +67,7 @@ export function WizardShell({
 
             <footer className="flex shrink-0 items-center justify-between px-xl py-md">
               <div>{onBack && <Button variant="primary" onClick={onBack}>Back</Button>}</div>
-              <div className="flex items-center gap-lg">
+              <div className="flex items-center">
                 {onSaveForLater && (
                   <Button variant="text" onClick={onSaveForLater}>
                     Save for Later

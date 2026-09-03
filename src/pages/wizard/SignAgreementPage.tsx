@@ -64,10 +64,12 @@ function SignatureModal({
 }) {
   const [typedName, setTypedName] = useState("")
   const demoRunning = useRef(false)
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   async function runAutoFill() {
     if (demoRunning.current || typedName || !fullName) return
     demoRunning.current = true
+    inputRef.current?.focus()
     for (let i = 1; i <= fullName.length; i++) {
       setTypedName(fullName.slice(0, i))
       await delay(20 + Math.random() * 30)
@@ -80,6 +82,7 @@ function SignatureModal({
       <div className="flex w-[520px] flex-col gap-md rounded-sm bg-white p-xl shadow-[var(--shadow-dropshadow-lg)]">
         <h2 className="text-lg font-semibold text-text-primary">Adopt Your Signature</h2>
         <TextField
+          ref={inputRef}
           label="Type your full name to sign"
           value={typedName}
           onChange={(e) => setTypedName(e.target.value)}
@@ -149,8 +152,10 @@ export function SignAgreementPage() {
   const navigate = useNavigate()
   const [showSignatureModal, setShowSignatureModal] = useState(false)
   const [verifying, setVerifying] = useState(false)
+  const [editingSignerInfo, setEditingSignerInfo] = useState(false)
   const signer = state.signer
   const demoRunning = useRef(false)
+  const fieldRefs = useRef<Record<keyof typeof signer, HTMLInputElement | null>>({ firstName: null, lastName: null, email: null })
 
   function setSigner<K extends keyof typeof signer>(key: K, value: (typeof signer)[K]) {
     update({ signer: { ...signer, [key]: value }, agreementSigned: false, agreementSignatureText: "", agreementFinished: false })
@@ -162,6 +167,7 @@ export function SignAgreementPage() {
     const next = { ...signer }
 
     async function typeField(key: keyof typeof signer, text: string) {
+      fieldRefs.current[key]?.focus()
       for (let i = 1; i <= text.length; i++) {
         next[key] = text.slice(0, i)
         update({ signer: { ...next }, agreementSigned: false, agreementSignatureText: "", agreementFinished: false })
@@ -200,15 +206,17 @@ export function SignAgreementPage() {
       onSaveForLater={() => navigate("/")}
     >
       <div className="flex flex-col gap-md">
-        <div className="flex min-h-10 items-center gap-xs rounded-sm border border-attention bg-white p-xs">
-          <img src={warningIcon} alt="" className="h-6 w-6 shrink-0" />
-          <p className="text-sm font-normal text-label-gray">
-            This name and email will be printed on the signed agreement and can't be changed after finalizing. Confirm they are correct.
-          </p>
-        </div>
+        {!state.agreementFinished && (
+          <div className="flex min-h-10 items-center gap-xs rounded-sm border border-attention bg-white p-xs">
+            <img src={warningIcon} alt="" className="h-6 w-6 shrink-0" />
+            <p className="text-sm font-normal text-label-gray">
+              This name and email will be printed on the signed agreement and can't be changed after finalizing. Confirm they are correct.
+            </p>
+          </div>
+        )}
 
-        {state.agreementLoaded ? (
-          <div className="flex items-end gap-md">
+        {state.agreementLoaded && !editingSignerInfo ? (
+          <div className="flex flex-wrap items-end gap-md">
             {(
               [
                 ["First Name", signer.firstName],
@@ -216,7 +224,7 @@ export function SignAgreementPage() {
                 ["Email Address", signer.email],
               ] as const
             ).map(([label, value]) => (
-              <div key={label} className="flex w-[248px] shrink-0 flex-col gap-xxs">
+              <div key={label} className="flex min-w-[150px] shrink basis-[248px] flex-col gap-xxs">
                 <span className="text-sm font-normal text-label-gray">{label} *</span>
                 <div className="flex h-9 items-center truncate rounded-sm border border-border-disabled bg-[#f8f8f8] px-sm text-sm text-[#b3b3b3]">
                   {value}
@@ -227,7 +235,7 @@ export function SignAgreementPage() {
               <button
                 type="button"
                 aria-label="Edit name and email"
-                onClick={() => update({ agreementLoaded: false })}
+                onClick={() => setEditingSignerInfo(true)}
                 className="flex h-9 shrink-0 items-center"
               >
                 <img src={editPencilIcon} alt="" className="h-5 w-5" />
@@ -235,34 +243,52 @@ export function SignAgreementPage() {
             )}
           </div>
         ) : (
-          <div className="flex items-end gap-md">
-            <TextField
-              label="First Name"
-              required
-              className="w-[248px] shrink-0"
-              value={signer.firstName}
-              onChange={(e) => setSigner("firstName", e.target.value)}
-              onFocus={() => runSignerAutoFill()}
-            />
-            <TextField
-              label="Last Name"
-              required
-              className="w-[248px] shrink-0"
-              value={signer.lastName}
-              onChange={(e) => setSigner("lastName", e.target.value)}
-            />
-            <TextField
-              label="Email Address"
-              type="email"
-              required
-              className="w-[248px] shrink-0"
-              value={signer.email}
-              onChange={(e) => setSigner("email", e.target.value)}
-            />
+          <div className="flex flex-wrap items-end gap-md">
+            <div className="min-w-[150px] shrink basis-[248px]">
+              <TextField
+                ref={(el) => {
+                  fieldRefs.current.firstName = el
+                }}
+                label="First Name"
+                required
+                className="w-full"
+                value={signer.firstName}
+                onChange={(e) => setSigner("firstName", e.target.value)}
+                onFocus={() => runSignerAutoFill()}
+              />
+            </div>
+            <div className="min-w-[150px] shrink basis-[248px]">
+              <TextField
+                ref={(el) => {
+                  fieldRefs.current.lastName = el
+                }}
+                label="Last Name"
+                required
+                className="w-full"
+                value={signer.lastName}
+                onChange={(e) => setSigner("lastName", e.target.value)}
+              />
+            </div>
+            <div className="min-w-[150px] shrink basis-[248px]">
+              <TextField
+                ref={(el) => {
+                  fieldRefs.current.email = el
+                }}
+                label="Email Address"
+                type="email"
+                required
+                className="w-full"
+                value={signer.email}
+                onChange={(e) => setSigner("email", e.target.value)}
+              />
+            </div>
             <Button
               variant="primary"
               disabled={!signerValid}
-              onClick={() => update({ agreementLoaded: true })}
+              onClick={() => {
+                update({ agreementLoaded: true })
+                setEditingSignerInfo(false)
+              }}
               className="shrink-0 whitespace-nowrap"
             >
               Load Agreement
@@ -283,7 +309,12 @@ export function SignAgreementPage() {
         )}
 
         {state.agreementLoaded && !state.agreementFinished && (
-          <div className="flex flex-col overflow-hidden rounded-sm border border-border-primary">
+          <div
+            className={clsx(
+              "flex flex-col overflow-hidden rounded-sm border border-border-primary",
+              editingSignerInfo && "pointer-events-none grayscale opacity-60",
+            )}
+          >
             <div className="flex items-center gap-xl bg-[#005cb9] px-md py-xs">
               <p className="flex-1 text-sm font-normal text-white">Select the sign field to create and add your signature</p>
               <button

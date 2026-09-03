@@ -24,7 +24,7 @@ function EnrollLayout() {
   )
 }
 
-/** Post VendorPay and VendorPay Batches only become reachable once enrollment has finished. */
+/** VendorPay Batches only becomes reachable once enrollment has finished. */
 function RequireEnrollment({ children }: { children: ReactNode }) {
   const { state } = useWizard()
   return state.enrollmentComplete ? <>{children}</> : <Navigate to="/" replace />
@@ -39,14 +39,7 @@ export default function App() {
             <Route path="/" element={<SplashPage />} />
             <Route path="/bank-accounts" element={<BankAccountsPage />} />
             <Route path="/pay-bills" element={<PayBillsPage />} />
-            <Route
-              path="/post-vendorpay"
-              element={
-                <RequireEnrollment>
-                  <PostVendorPayPage />
-                </RequireEnrollment>
-              }
-            />
+            <Route path="/post-vendorpay" element={<PostVendorPayPage />} />
             <Route
               path="/vendorpay-batches"
               element={

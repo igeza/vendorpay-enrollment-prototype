@@ -49,6 +49,9 @@ export function ChooseBanksPage() {
   const [query, setQuery] = useState("")
   const [revealed, setRevealed] = useState<Record<string, boolean>>({})
   const demoRunning = useRef(false)
+  const ownerNameRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const ownerTypeRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const payerNameRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const banks = state.banks
   const payerOptions = [state.company.legalCompanyName, state.company.dba].filter(Boolean)
@@ -78,6 +81,7 @@ export function ChooseBanksPage() {
       const idx = next.findIndex((b) => b.id === row.id)
       const demo = OWNER_DEMO_DATA[row.bankName]
 
+      ownerNameRefs.current[row.id]?.focus()
       for (let i = 1; i <= demo.ownerName.length; i++) {
         next[idx] = { ...next[idx], ownerName: demo.ownerName.slice(0, i) }
         update({ banks: next.map((b) => ({ ...b })) })
@@ -85,10 +89,12 @@ export function ChooseBanksPage() {
       }
       await delay(150)
 
+      ownerTypeRefs.current[row.id]?.focus()
       await delay(200)
       next[idx] = { ...next[idx], ownerType: demo.ownerType }
       update({ banks: next.map((b) => ({ ...b })) })
 
+      payerNameRefs.current[row.id]?.focus()
       await delay(200)
       next[idx] = { ...next[idx], payerName: demo.payerName }
       update({ banks: next.map((b) => ({ ...b })) })
@@ -128,7 +134,7 @@ export function ChooseBanksPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Find a bank account"
-              className="h-9 w-full rounded-sm border border-border-primary bg-input-fill pl-8 pr-sm text-sm outline-none focus:border-brand-blue"
+              className="h-9 w-full rounded-sm border border-brand-blue bg-white pl-8 pr-sm text-sm outline-none placeholder:italic placeholder:text-[#b3b3b3] focus:border-brand-blue"
             />
           </div>
           <button type="button" onClick={fillRoutingFromMicr} className="text-sm font-normal text-text-link hover:underline">
@@ -209,6 +215,9 @@ export function ChooseBanksPage() {
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
                   <input
+                    ref={(el) => {
+                      ownerNameRefs.current[b.id] = el
+                    }}
                     disabled={!b.selected}
                     className={clsx(
                       "h-8 w-full rounded-sm border px-xs text-sm outline-none",
@@ -223,6 +232,9 @@ export function ChooseBanksPage() {
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
                   <Dropdown
+                    ref={(el) => {
+                      ownerTypeRefs.current[b.id] = el
+                    }}
                     size="compact"
                     disabled={!b.selected}
                     placeholder=""
@@ -233,6 +245,9 @@ export function ChooseBanksPage() {
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
                   <Dropdown
+                    ref={(el) => {
+                      payerNameRefs.current[b.id] = el
+                    }}
                     size="compact"
                     disabled={!b.selected}
                     placeholder=""

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { MultiSelectDropdown } from "../../components/ui/MultiSelectDropdown"
 import { useWizard } from "../../context/WizardContext"
-import { CONTACT_ROLES, CONTACT_ROLE_DESCRIPTIONS, makeId, type Contact, type ContactRole } from "../../types"
+import { CONTACT_ROLES, CONTACT_ROLE_DESCRIPTIONS, makeId, type Contact } from "../../types"
 import addIcon from "../../assets/contacts/add-icon.svg"
 import checkCircleDone from "../../assets/contacts/check-circle-filled-done.svg"
 import checkCirclePending from "../../assets/contacts/check-circle-filled-pending.svg"
@@ -11,7 +11,6 @@ import deleteIcon from "../../assets/beneficial-owners/delete-filled.svg"
 
 const ROLE_OPTIONS = CONTACT_ROLES.map((role) => ({ value: role, description: CONTACT_ROLE_DESCRIPTIONS[role] }))
 
-const REMAINING_ROLES: ContactRole[] = ["Payment Funding Contact", "Payment Servicing Contact", "Platform Contact"]
 const DEMO_SECOND_CONTACT = {
   firstName: "Emery",
   lastName: "Callahan",
@@ -32,6 +31,13 @@ export function ContactsPage() {
   const navigate = useNavigate()
   const contacts = state.contacts.length ? state.contacts : [emptyContact()]
   const demoRunningIds = useRef<Set<string>>(new Set())
+  const fieldRefs = useRef<Record<string, HTMLInputElement | null>>({})
+
+  function fieldRef(contactId: string, key: "firstName" | "lastName" | "email" | "phone") {
+    return (el: HTMLInputElement | null) => {
+      fieldRefs.current[`${contactId}:${key}`] = el
+    }
+  }
 
   async function runContactAutoFill(contactId: string) {
     if (demoRunningIds.current.has(contactId)) return
@@ -43,6 +49,7 @@ export function ContactsPage() {
     const idx = next.findIndex((c) => c.id === contactId)
 
     async function typeField(key: "firstName" | "lastName" | "email" | "phone", text: string) {
+      fieldRefs.current[`${contactId}:${key}`]?.focus()
       for (let i = 1; i <= text.length; i++) {
         next[idx] = { ...next[idx], [key]: text.slice(0, i) }
         update({ contacts: next.map((c) => ({ ...c })) })
@@ -152,18 +159,16 @@ export function ContactsPage() {
                 </div>
                 <div className="min-w-0 px-sm">
                   <input
+                    ref={fieldRef(c.id, "firstName")}
                     className="h-8 w-full rounded-sm border border-border-primary bg-input-fill px-xs text-sm outline-none focus:border-brand-blue"
                     value={c.firstName}
                     onChange={(e) => patchContact(c.id, { firstName: e.target.value })}
-                    onFocus={() => {
-                      if (c.roles.length === REMAINING_ROLES.length && REMAINING_ROLES.every((r) => c.roles.includes(r))) {
-                        runContactAutoFill(c.id)
-                      }
-                    }}
+                    onFocus={() => runContactAutoFill(c.id)}
                   />
                 </div>
                 <div className="min-w-0 px-sm">
                   <input
+                    ref={fieldRef(c.id, "lastName")}
                     className="h-8 w-full rounded-sm border border-border-primary bg-input-fill px-xs text-sm outline-none focus:border-brand-blue"
                     value={c.lastName}
                     onChange={(e) => patchContact(c.id, { lastName: e.target.value })}
@@ -171,6 +176,7 @@ export function ContactsPage() {
                 </div>
                 <div className="min-w-0 px-sm">
                   <input
+                    ref={fieldRef(c.id, "email")}
                     type="email"
                     className="h-8 w-full rounded-sm border border-border-primary bg-input-fill px-xs text-sm outline-none focus:border-brand-blue"
                     value={c.email}
@@ -179,6 +185,7 @@ export function ContactsPage() {
                 </div>
                 <div className="min-w-0 px-sm">
                   <input
+                    ref={fieldRef(c.id, "phone")}
                     type="tel"
                     className="h-8 w-full rounded-sm border border-border-primary bg-input-fill px-xs text-sm outline-none focus:border-brand-blue"
                     value={c.phone}

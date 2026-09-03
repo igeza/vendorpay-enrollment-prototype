@@ -33,6 +33,13 @@ export function ControlPersonPage() {
   const navigate = useNavigate()
   const p = state.controlPerson
   const demoRunning = useRef(false)
+  const fieldRefs = useRef<Partial<Record<keyof ControlPerson, HTMLInputElement | HTMLButtonElement | null>>>({})
+
+  function fieldRef(key: keyof ControlPerson) {
+    return (el: HTMLInputElement | HTMLButtonElement | null) => {
+      fieldRefs.current[key] = el
+    }
+  }
 
   function set<K extends keyof typeof p>(key: K, value: (typeof p)[K]) {
     update({ controlPerson: { ...p, [key]: value } })
@@ -44,6 +51,7 @@ export function ControlPersonPage() {
     const next: ControlPerson = { ...p }
 
     async function typeField(key: keyof ControlPerson, text: string) {
+      fieldRefs.current[key]?.focus()
       for (let i = 1; i <= text.length; i++) {
         ;(next[key] as string) = text.slice(0, i)
         update({ controlPerson: { ...next } })
@@ -53,6 +61,7 @@ export function ControlPersonPage() {
     }
 
     async function selectField(key: keyof ControlPerson, value: string) {
+      fieldRefs.current[key]?.focus()
       await delay(250)
       ;(next[key] as string) = value
       update({ controlPerson: { ...next } })
@@ -105,16 +114,17 @@ export function ControlPersonPage() {
         <Card className="flex flex-col gap-md">
         <div className="grid grid-cols-3 gap-md">
           <TextField
+            ref={fieldRef("firstName")}
             label="First Name"
             required
             value={p.firstName}
             onChange={(e) => set("firstName", e.target.value)}
             onFocus={() => runAutoFillDemo()}
           />
-          <TextField label="Last Name" required value={p.lastName} onChange={(e) => set("lastName", e.target.value)} />
-          <TextField label="Title" required value={p.title} onChange={(e) => set("title", e.target.value)} />
-          <TextField label="Email" type="email" required value={p.email} onChange={(e) => set("email", e.target.value)} />
-          <DatePicker label="Date of Birth" required value={p.dateOfBirth} onChange={(v) => set("dateOfBirth", v)} />
+          <TextField ref={fieldRef("lastName")} label="Last Name" required value={p.lastName} onChange={(e) => set("lastName", e.target.value)} />
+          <TextField ref={fieldRef("title")} label="Title" required value={p.title} onChange={(e) => set("title", e.target.value)} />
+          <TextField ref={fieldRef("email")} label="Email" type="email" required value={p.email} onChange={(e) => set("email", e.target.value)} />
+          <DatePicker ref={fieldRef("dateOfBirth")} label="Date of Birth" required value={p.dateOfBirth} onChange={(v) => set("dateOfBirth", v)} />
         </div>
 
         <h3 className="border-b border-border-primary pb-xxs text-sm font-semibold text-text-primary">
@@ -122,16 +132,18 @@ export function ControlPersonPage() {
         </h3>
         <div className="grid grid-cols-3 gap-md">
           <TextField
+            ref={fieldRef("addressLine1")}
             label="Street"
             required
             className="col-span-2"
             value={p.addressLine1}
             onChange={(e) => set("addressLine1", e.target.value)}
           />
-          <TextField label="City" required value={p.city} onChange={(e) => set("city", e.target.value)} />
-          <Dropdown label="State" required options={US_STATES} value={p.state} onChange={(v) => set("state", v)} />
-          <TextField label="Postal Code" required value={p.zip} onChange={(e) => set("zip", e.target.value)} />
+          <TextField ref={fieldRef("city")} label="City" required value={p.city} onChange={(e) => set("city", e.target.value)} />
+          <Dropdown ref={fieldRef("state")} label="State" required options={US_STATES} value={p.state} onChange={(v) => set("state", v)} />
+          <TextField ref={fieldRef("zip")} label="Postal Code" required value={p.zip} onChange={(e) => set("zip", e.target.value)} />
           <Dropdown
+            ref={fieldRef("country")}
             label="Country"
             required
             className="col-span-2"

@@ -69,3 +69,7 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-sans);
 }
+
+button:not(:disabled) {
+  cursor: pointer;
+}

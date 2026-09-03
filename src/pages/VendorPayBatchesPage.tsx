@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { AppHeader } from "../components/AppHeader"
 import { BatchDetailsModal } from "../components/BatchDetailsModal"
@@ -29,6 +30,7 @@ function statusDotColor(status: string) {
 }
 
 export function VendorPayBatchesPage() {
+  const navigate = useNavigate()
   const { batches } = usePayBills()
   const [query, setQuery] = useState("")
   const [selectedBatchId, setSelectedBatchId] = useState<string | null>(null)
@@ -50,10 +52,10 @@ export function VendorPayBatchesPage() {
           </span>
         </div>
         <div className="flex items-center gap-md">
-          <span className="flex items-center gap-xxs text-sm">
+          <button type="button" onClick={() => navigate("/bank-accounts")} className="flex items-center gap-xxs text-sm hover:underline">
             Manage VendorPay Settings
             <img src={arrowForwardIcon} alt="" className="h-4 w-4" />
-          </span>
+          </button>
           <button type="button" aria-label="Refresh">
             <img src={autorenewIcon} alt="" className="h-5 w-5" />
           </button>

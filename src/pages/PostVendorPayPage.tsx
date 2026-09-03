@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AppHeader } from "../components/AppHeader"
 import { Checkbox } from "../components/ui/Controls"
 import { SuccessToast } from "../components/SuccessToast"
@@ -14,6 +15,7 @@ function formatMoney(n: number) {
 }
 
 export function PostVendorPayPage() {
+  const navigate = useNavigate()
   const { vendorPayQueue, toggleVendorPaymentSelected, toggleAllVendorPayments, postVendorPayments } = usePayBills()
   const [query, setQuery] = useState("")
   const [toast, setToast] = useState<string | null>(null)
@@ -41,10 +43,10 @@ export function PostVendorPayPage() {
           </span>
         </div>
         <div className="flex items-center gap-md">
-          <span className="flex items-center gap-xxs text-sm">
+          <button type="button" onClick={() => navigate("/bank-accounts")} className="flex items-center gap-xxs text-sm hover:underline">
             Manage VendorPay Settings
             <img src={arrowForwardIcon} alt="" className="h-4 w-4" />
-          </span>
+          </button>
           <button type="button" aria-label="Refresh">
             <img src={autorenewIcon} alt="" className="h-5 w-5" />
           </button>

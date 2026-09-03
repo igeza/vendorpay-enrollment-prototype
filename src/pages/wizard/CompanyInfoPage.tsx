@@ -74,7 +74,7 @@ export function CompanyInfoPage() {
             <button
               type="button"
               onClick={fillFromCompanyProfile}
-              className="-mx-xs rounded-sm px-xs text-sm font-normal text-text-link hover:bg-black/5"
+              className="text-sm font-normal text-text-link hover:underline"
             >
               Fill From Company Profile
             </button>

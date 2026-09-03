@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState, type Ref } from "react"
 import clsx from "clsx"
 import chevronDownIcon from "../../assets/shell/keyboard-arrow-down.svg"
 import chevronDownDisabledIcon from "../../assets/shell/keyboard-arrow-down-disabled.svg"
@@ -16,6 +16,7 @@ interface DropdownProps {
   className?: string
   labelIcon?: React.ReactNode
   size?: "default" | "compact"
+  ref?: Ref<HTMLButtonElement>
 }
 
 /** RMX-style dropdown trigger + floating panel — never a native <select>. */
@@ -32,6 +33,7 @@ export function Dropdown({
   className,
   labelIcon,
   size = "default",
+  ref,
 }: DropdownProps) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -65,6 +67,7 @@ export function Dropdown({
       <div className="relative">
         <button
           id={id}
+          ref={ref}
           type="button"
           disabled={disabled}
           onClick={() => setOpen((o) => !o)}
@@ -74,7 +77,7 @@ export function Dropdown({
             disabled
               ? "cursor-not-allowed border-border-disabled bg-[#f8f8f8] text-[#b3b3b3]"
               : clsx(
-                  "bg-input-fill text-text-primary hover:border-brand-blue/60",
+                  "bg-input-fill text-text-primary hover:border-brand-blue/60 focus:border-brand-blue",
                   error ? "border-error" : open ? "border-brand-blue" : "border-border-primary",
                 ),
           )}
