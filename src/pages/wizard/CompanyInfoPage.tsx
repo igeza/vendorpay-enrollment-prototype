@@ -134,7 +134,7 @@ export function CompanyInfoPage() {
       subtitle="Let's start by gathering some information about your company."
       onNext={() => navigate("/enroll/control-person")}
       nextDisabled={!requiredFilled}
-      onSaveForLater={() => navigate("/")}
+      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-xl">
         <div className="flex flex-col gap-xxs">

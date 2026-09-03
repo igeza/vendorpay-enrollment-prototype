@@ -107,7 +107,7 @@ export function ControlPersonPage() {
       onBack={() => navigate("/enroll/company-info")}
       onNext={() => navigate("/enroll/beneficial-owners")}
       nextDisabled={!requiredFilled}
-      onSaveForLater={() => navigate("/")}
+      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-xxs">
         <h2 className="text-sm font-semibold text-text-primary">Control Person</h2>

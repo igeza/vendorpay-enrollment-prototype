@@ -203,7 +203,7 @@ export function SignAgreementPage() {
       onNext={submitForReview}
       nextLabel="Submit for Review"
       nextDisabled={!state.agreementFinished}
-      onSaveForLater={() => navigate("/")}
+      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-md">
         {!state.agreementFinished && (

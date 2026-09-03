@@ -90,16 +90,22 @@ export function VendorPayBatchesPage() {
 
           <div className="flex flex-col gap-xxs">
             <span className="text-sm font-normal text-text-link">Filter By Date</span>
-            <div className="flex h-9 items-center gap-xs">
-              <div className="flex h-9 w-[150px] items-center justify-between rounded-sm border border-brand-blue bg-white px-sm text-sm text-text-primary">
-                1/15/2026
-                <img src={calendarIcon} alt="" className="h-4 w-4 shrink-0" />
+            <div className="flex h-9 w-[362px] items-center overflow-hidden rounded-sm border border-brand-blue">
+              <div className="flex h-full min-w-0 flex-1 items-center bg-white px-sm text-sm text-text-primary">1/15/2026</div>
+              <div className="flex h-full w-7 shrink-0 items-center justify-center border-l border-brand-blue bg-input-fill">
+                <img src={calendarIcon} alt="" className="h-4 w-4" />
               </div>
-              <div className="flex h-9 w-[150px] items-center justify-between rounded-sm border border-brand-blue bg-white px-sm text-sm text-text-primary">
+              <div className="flex h-full min-w-0 flex-1 items-center border-l border-brand-blue bg-white px-sm text-sm text-text-primary">
                 04/15/2026
-                <img src={calendarIcon} alt="" className="h-4 w-4 shrink-0" />
               </div>
-              <button type="button" aria-label="Filters" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-brand-blue hover:bg-hover-primary">
+              <div className="flex h-full w-7 shrink-0 items-center justify-center border-l border-brand-blue bg-input-fill">
+                <img src={calendarIcon} alt="" className="h-4 w-4" />
+              </div>
+              <button
+                type="button"
+                aria-label="Filters"
+                className="flex h-full w-9 shrink-0 items-center justify-center border-l border-brand-blue bg-brand-blue hover:bg-hover-primary"
+              >
                 <img src={tuneIcon} alt="" className="h-5 w-5" />
               </button>
             </div>

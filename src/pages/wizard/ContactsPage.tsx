@@ -111,7 +111,7 @@ export function ContactsPage() {
       onBack={() => navigate("/enroll/beneficial-owners")}
       onNext={() => navigate("/enroll/choose-banks")}
       nextDisabled={!(allRolesSatisfied && rowsValid)}
-      onSaveForLater={() => navigate("/")}
+      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-md">
         <div className="flex flex-col gap-xxs px-xs">
