@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { TextField, TextBox } from "../../components/ui/Field"
@@ -7,10 +8,38 @@ import { InfoTooltip } from "../../components/ui/InfoTooltip"
 import { useWizard } from "../../context/WizardContext"
 import { COMPANY_TYPES, COUNTRIES, US_STATES } from "../../constants"
 
+const COMPANY_PROFILE_DATA = {
+  companyName: "Premiere Property Management",
+  legalCompanyName: "Premiere Property Management",
+  dba: "Premiere PM",
+  companyType: "Corporation",
+  taxId: "TX-123-456-789",
+  naics: "531311",
+  yearOfEstablishment: "1983",
+  stateOfEstablishment: "Washington",
+  country: "United States of America",
+  street: "742 Evergreen Terrace",
+  city: "Seattle",
+  state: "WA",
+  postalCode: "98136",
+} as const
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export function CompanyInfoPage() {
   const { state, update } = useWizard()
   const navigate = useNavigate()
   const c = state.company
+  const demoRunning = useRef(false)
+  const fieldRefs = useRef<Partial<Record<keyof typeof COMPANY_PROFILE_DATA, HTMLInputElement | HTMLButtonElement | null>>>({})
+
+  function fieldRef(key: keyof typeof COMPANY_PROFILE_DATA) {
+    return (el: HTMLInputElement | HTMLButtonElement | null) => {
+      fieldRefs.current[key] = el
+    }
+  }
 
   function set<K extends keyof typeof c>(key: K, value: (typeof c)[K]) {
     update({ company: { ...c, [key]: value } })
@@ -41,21 +70,61 @@ export function CompanyInfoPage() {
     update({
       company: {
         ...c,
-        companyName: c.companyName || "Premiere Property Management",
-        legalCompanyName: c.legalCompanyName || "Premiere Property Management",
-        dba: c.dba || "Premiere PM",
-        companyType: c.companyType || "Corporation",
-        taxId: c.taxId || "TX-123-456-789",
-        naics: c.naics || "531311",
-        yearOfEstablishment: c.yearOfEstablishment || "1983",
-        stateOfEstablishment: c.stateOfEstablishment || "Washington",
-        country: c.country || "United States of America",
-        street: c.street || "742 Evergreen Terrace",
-        city: c.city || "Seattle",
-        state: c.state || "WA",
-        postalCode: c.postalCode || "98136",
+        companyName: c.companyName || COMPANY_PROFILE_DATA.companyName,
+        legalCompanyName: c.legalCompanyName || COMPANY_PROFILE_DATA.legalCompanyName,
+        dba: c.dba || COMPANY_PROFILE_DATA.dba,
+        companyType: c.companyType || COMPANY_PROFILE_DATA.companyType,
+        taxId: c.taxId || COMPANY_PROFILE_DATA.taxId,
+        naics: c.naics || COMPANY_PROFILE_DATA.naics,
+        yearOfEstablishment: c.yearOfEstablishment || COMPANY_PROFILE_DATA.yearOfEstablishment,
+        stateOfEstablishment: c.stateOfEstablishment || COMPANY_PROFILE_DATA.stateOfEstablishment,
+        country: c.country || COMPANY_PROFILE_DATA.country,
+        street: c.street || COMPANY_PROFILE_DATA.street,
+        city: c.city || COMPANY_PROFILE_DATA.city,
+        state: c.state || COMPANY_PROFILE_DATA.state,
+        postalCode: c.postalCode || COMPANY_PROFILE_DATA.postalCode,
       },
     })
+  }
+
+  async function runCompanyAutoFill() {
+    if (demoRunning.current || c.companyName) return
+    demoRunning.current = true
+    const next = { ...c }
+
+    async function typeField(key: keyof typeof COMPANY_PROFILE_DATA, text: string) {
+      fieldRefs.current[key]?.focus()
+      for (let i = 1; i <= text.length; i++) {
+        ;(next[key] as string) = text.slice(0, i)
+        update({ company: { ...next } })
+        await delay(20 + Math.random() * 30)
+      }
+      await delay(180)
+    }
+
+    async function selectField(key: keyof typeof COMPANY_PROFILE_DATA, value: string) {
+      fieldRefs.current[key]?.focus()
+      await delay(250)
+      ;(next[key] as string) = value
+      update({ company: { ...next } })
+      await delay(250)
+    }
+
+    await typeField("companyName", COMPANY_PROFILE_DATA.companyName)
+    await typeField("legalCompanyName", COMPANY_PROFILE_DATA.legalCompanyName)
+    await typeField("dba", COMPANY_PROFILE_DATA.dba)
+    await selectField("companyType", COMPANY_PROFILE_DATA.companyType)
+    await typeField("taxId", COMPANY_PROFILE_DATA.taxId)
+    await typeField("naics", COMPANY_PROFILE_DATA.naics)
+    await typeField("yearOfEstablishment", COMPANY_PROFILE_DATA.yearOfEstablishment)
+    await selectField("stateOfEstablishment", COMPANY_PROFILE_DATA.stateOfEstablishment)
+    await selectField("country", COMPANY_PROFILE_DATA.country)
+    await typeField("street", COMPANY_PROFILE_DATA.street)
+    await typeField("city", COMPANY_PROFILE_DATA.city)
+    await selectField("state", COMPANY_PROFILE_DATA.state)
+    await typeField("postalCode", COMPANY_PROFILE_DATA.postalCode)
+
+    demoRunning.current = false
   }
 
   return (
@@ -81,14 +150,23 @@ export function CompanyInfoPage() {
           </div>
           <Card className="flex flex-col gap-md">
           <div className="grid grid-cols-3 gap-md">
-            <TextField label="Company Name" required value={c.companyName} onChange={(e) => set("companyName", e.target.value)} />
             <TextField
+              ref={fieldRef("companyName")}
+              label="Company Name"
+              required
+              value={c.companyName}
+              onChange={(e) => set("companyName", e.target.value)}
+              onFocus={() => runCompanyAutoFill()}
+            />
+            <TextField
+              ref={fieldRef("legalCompanyName")}
               label="Legal Company Name"
               required
               value={c.legalCompanyName}
               onChange={(e) => set("legalCompanyName", e.target.value)}
             />
             <TextField
+              ref={fieldRef("dba")}
               label="DBA"
               labelIcon={<InfoTooltip text="Enter your DBA ('Doing Business As') if your business operates under a name different from its legal name." />}
               required
@@ -96,6 +174,7 @@ export function CompanyInfoPage() {
               onChange={(e) => set("dba", e.target.value)}
             />
             <Dropdown
+              ref={fieldRef("companyType")}
               label="Company Type"
               required
               options={COMPANY_TYPES}
@@ -103,6 +182,7 @@ export function CompanyInfoPage() {
               onChange={(v) => set("companyType", v as typeof c.companyType)}
             />
             <TextField
+              ref={fieldRef("taxId")}
               label="Tax ID"
               labelIcon={<InfoTooltip text="Enter your business Tax ID (such as an EIN) used for tax reporting and verification." />}
               required
@@ -110,6 +190,7 @@ export function CompanyInfoPage() {
               onChange={(e) => set("taxId", e.target.value)}
             />
             <TextField
+              ref={fieldRef("naics")}
               label="NAICS"
               labelIcon={<InfoTooltip text="Enter the NAICS code that best describes your business's primary activity or industry." />}
               required
@@ -117,12 +198,14 @@ export function CompanyInfoPage() {
               onChange={(e) => set("naics", e.target.value)}
             />
             <TextField
+              ref={fieldRef("yearOfEstablishment")}
               label="Year of Establishment"
               required
               value={c.yearOfEstablishment}
               onChange={(e) => set("yearOfEstablishment", e.target.value)}
             />
             <Dropdown
+              ref={fieldRef("stateOfEstablishment")}
               label="State of Establishment"
               required
               options={US_STATES}
@@ -135,11 +218,12 @@ export function CompanyInfoPage() {
             Corporate Address
           </h3>
           <div className="grid grid-cols-3 gap-md">
-            <Dropdown label="Country" required options={COUNTRIES} value={c.country} onChange={(v) => set("country", v)} />
-            <TextField label="Street" required value={c.street} onChange={(e) => set("street", e.target.value)} />
-            <TextField label="City" required value={c.city} onChange={(e) => set("city", e.target.value)} />
-            <Dropdown label="State" required options={US_STATES} value={c.state} onChange={(v) => set("state", v)} />
+            <Dropdown ref={fieldRef("country")} label="Country" required options={COUNTRIES} value={c.country} onChange={(v) => set("country", v)} />
+            <TextField ref={fieldRef("street")} label="Street" required value={c.street} onChange={(e) => set("street", e.target.value)} />
+            <TextField ref={fieldRef("city")} label="City" required value={c.city} onChange={(e) => set("city", e.target.value)} />
+            <Dropdown ref={fieldRef("state")} label="State" required options={US_STATES} value={c.state} onChange={(v) => set("state", v)} />
             <TextField
+              ref={fieldRef("postalCode")}
               label="Postal Code"
               required
               value={c.postalCode}

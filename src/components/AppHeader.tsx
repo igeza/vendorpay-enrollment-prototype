@@ -65,7 +65,7 @@ export function AppHeader() {
           <button type="button" aria-label="Notifications">
             <img src={notificationsIcon} alt="" className="h-5 w-5" />
           </button>
-          <div className="flex h-8 w-8 items-center justify-center rounded-round bg-brand-blue text-sm">MG</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-round bg-brand-blue text-sm">TL</div>
         </div>
       </div>
 
