@@ -3,7 +3,6 @@ import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 import { WizardProvider, useWizard } from "./context/WizardContext"
 import { PayBillsProvider } from "./context/PayBillsContext"
 import { SplashPage } from "./pages/SplashPage"
-import { EnrollmentSavedPage } from "./pages/EnrollmentSavedPage"
 import { CompanyInfoPage } from "./pages/wizard/CompanyInfoPage"
 import { ControlPersonPage } from "./pages/wizard/ControlPersonPage"
 import { BeneficialOwnersPage } from "./pages/wizard/BeneficialOwnersPage"
@@ -38,7 +37,6 @@ export default function App() {
         <HashRouter>
           <Routes>
             <Route path="/" element={<SplashPage />} />
-            <Route path="/enroll-saved" element={<EnrollmentSavedPage />} />
             <Route path="/bank-accounts" element={<BankAccountsPage />} />
             <Route path="/pay-bills" element={<PayBillsPage />} />
             <Route path="/post-vendorpay" element={<PostVendorPayPage />} />

@@ -81,7 +81,6 @@ export function BeneficialOwnersPage() {
       onBack={() => navigate("/enroll/control-person")}
       onNext={() => navigate("/enroll/contacts")}
       nextDisabled={!ownersValid}
-      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-md">
         <RadioGroup

@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react"
+import { type ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import { Stepper } from "./Stepper"
 import { Button } from "./ui/Button"
@@ -16,7 +16,6 @@ interface WizardShellProps {
   onNext?: () => void
   nextLabel?: string
   nextDisabled?: boolean
-  onSaveForLater?: () => void
 }
 
 export function WizardShell({
@@ -28,15 +27,9 @@ export function WizardShell({
   onNext,
   nextLabel = "Next",
   nextDisabled,
-  onSaveForLater,
 }: WizardShellProps) {
   const navigate = useNavigate()
-  const { update, reset } = useWizard()
-
-  useEffect(() => {
-    update({ lastStep: stepKey })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepKey])
+  const { reset } = useWizard()
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(76,76,76,0.5)] p-xl">
@@ -73,11 +66,6 @@ export function WizardShell({
             <footer className="flex shrink-0 items-center justify-between px-xl py-md">
               <div>{onBack && <Button variant="primary" onClick={onBack}>Back</Button>}</div>
               <div className="flex items-center">
-                {onSaveForLater && (
-                  <Button variant="text" onClick={onSaveForLater}>
-                    Save for Later
-                  </Button>
-                )}
                 {onNext && (
                   <Button variant="primary" onClick={onNext} disabled={nextDisabled}>
                     {nextLabel}

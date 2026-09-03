@@ -113,7 +113,6 @@ export interface WizardState {
   agreementSigned: boolean
   agreementFinished: boolean
   enrollmentComplete: boolean
-  lastStep: StepKey
 }
 
 export const WIZARD_STEPS = [
@@ -207,7 +206,6 @@ export const initialWizardState: WizardState = {
   agreementSigned: false,
   agreementFinished: false,
   enrollmentComplete: false,
-  lastStep: "company-info",
 }
 
 export function makeId() {

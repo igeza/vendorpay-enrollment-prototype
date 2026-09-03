@@ -137,7 +137,6 @@ export function ChooseBanksPage() {
       onBack={() => navigate("/enroll/contacts")}
       onNext={() => navigate("/enroll/sign-agreement")}
       nextDisabled={!canProceed}
-      onSaveForLater={() => navigate("/enroll-saved")}
     >
       <div className="flex flex-col gap-md">
         <div className="flex items-center gap-md">
