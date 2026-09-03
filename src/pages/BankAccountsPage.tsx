@@ -194,27 +194,21 @@ export function BankAccountsPage() {
             </div>
 
             {visibleBanks.map((b) => (
-              <div key={b.bankName} className="flex h-9 items-center border-t border-border-primary bg-white">
+              <div
+                key={b.bankName}
+                onClick={() => setEditingBank(b.bankName)}
+                className="flex h-9 cursor-pointer items-center border-t border-border-primary bg-white hover:bg-row-hover"
+              >
                 <div className="flex w-[68px] shrink-0 items-center justify-center px-xs">
-                  {b.enabled ? (
-                    <img src={checkCircleIcon} alt="Enabled" className="h-5 w-5" />
-                  ) : (
-                    <span className="h-5 w-5 rounded-round border-2 border-[#b3b3b3]" />
-                  )}
+                  {b.enabled && <img src={checkCircleIcon} alt="Enabled" className="h-5 w-5" />}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setEditingBank(b.bankName)}
-                  className="flex-1 truncate px-xs text-left text-sm text-text-primary"
-                >
-                  {b.bankName}
-                </button>
+                <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.bankName}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.routingNumber}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.accountNumber}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.ownerName}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.ownerType}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.payerName}</div>
-                <div className="flex w-9 shrink-0 items-center justify-center px-xs">
+                <div className="flex w-9 shrink-0 items-center justify-center px-xs" onClick={(e) => e.stopPropagation()}>
                   <KebabMenu enabled={b.enabled} onToggleEnabled={() => toggleEnabled(b.bankName)} />
                 </div>
               </div>
