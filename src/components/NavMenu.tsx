@@ -186,7 +186,7 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="flex h-[449px] items-stretch">
+        <div className="relative flex h-[449px] items-stretch">
           <div className="flex w-[212px] shrink-0 flex-col gap-sm overflow-y-auto border-r border-border-primary py-xs">
             {CATEGORIES.map((cat) => (
               <button
@@ -195,7 +195,7 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
                 disabled={cat.key !== "payables"}
                 onClick={() => setSelectedKey(cat.key)}
                 className={clsx(
-                  "relative flex h-7 shrink-0 items-center px-md text-left text-lg",
+                  "flex h-7 shrink-0 items-center px-md text-left text-lg",
                   cat.key === selectedKey
                     ? "bg-[#0071aa] text-white"
                     : cat.key === "payables"
@@ -204,18 +204,21 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
                 )}
               >
                 {cat.label}
-                {cat.key === selectedKey && (
-                  <span aria-hidden="true" className="absolute -bottom-3 right-0 flex h-3 w-[13px] rotate-180 -scale-y-100 items-center justify-center">
-                    <img src={cornerIcon} alt="" className="h-3 w-[13px]" />
-                  </span>
-                )}
               </button>
             ))}
           </div>
 
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[212px] z-10 h-[40px] w-[13px]"
+            style={{ top: 8 + CATEGORIES.findIndex((c) => c.key === selectedKey) * 40 }}
+          >
+            <img src={cornerIcon} alt="" className="h-full w-full" />
+          </span>
+
           <div className="flex min-w-0 flex-1 flex-col justify-between overflow-y-auto">
             {selected.columns ? (
-              <div className="flex flex-wrap gap-xs p-sm">
+              <div className="flex flex-wrap gap-xs py-sm pr-sm pl-[21px]">
                 {selected.columns.map((col) => (
                   <div key={col.title} className="flex flex-col gap-xs px-xs py-md">
                     <div className="border-b border-[#0071aa] pb-xxs">
