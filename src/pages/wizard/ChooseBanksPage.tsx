@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { WizardShell } from "../../components/WizardShell"
@@ -116,6 +116,11 @@ export function ChooseBanksPage() {
 
     demoRunning.current = false
   }
+
+  // As soon as any bank row is selected (and still missing owner info), fill it automatically.
+  useEffect(() => {
+    runOwnerAutoFill()
+  }, [banks])
 
   const filtered = banks.filter((b) => b.bankName.toLowerCase().includes(query.toLowerCase()))
   const allFilteredSelected = filtered.length > 0 && filtered.every((b) => b.selected)
@@ -249,7 +254,6 @@ export function ChooseBanksPage() {
                     )}
                     value={b.ownerName}
                     onChange={(e) => patchBank(b.id, { ownerName: e.target.value })}
-                    onFocus={() => runOwnerAutoFill()}
                   />
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">

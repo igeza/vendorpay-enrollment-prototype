@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { TextField, TextBox } from "../../components/ui/Field"
@@ -127,6 +127,10 @@ export function CompanyInfoPage() {
     demoRunning.current = false
   }
 
+  useEffect(() => {
+    runCompanyAutoFill()
+  }, [])
+
   return (
     <WizardShell
       stepKey="company-info"
@@ -155,7 +159,6 @@ export function CompanyInfoPage() {
               required
               value={c.companyName}
               onChange={(e) => set("companyName", e.target.value)}
-              onFocus={() => runCompanyAutoFill()}
             />
             <TextField
               ref={fieldRef("legalCompanyName")}

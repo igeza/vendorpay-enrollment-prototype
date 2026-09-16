@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { TextField } from "../../components/ui/Field"
@@ -78,6 +78,10 @@ export function ControlPersonPage() {
     demoRunning.current = false
   }
 
+  useEffect(() => {
+    runAutoFillDemo()
+  }, [])
+
   const requiredFilled =
     p.firstName &&
     p.lastName &&
@@ -118,7 +122,6 @@ export function ControlPersonPage() {
             required
             value={p.firstName}
             onChange={(e) => set("firstName", e.target.value)}
-            onFocus={() => runAutoFillDemo()}
           />
           <TextField ref={fieldRef("lastName")} label="Last Name" required value={p.lastName} onChange={(e) => set("lastName", e.target.value)} />
           <TextField ref={fieldRef("title")} label="Title" required value={p.title} onChange={(e) => set("title", e.target.value)} />

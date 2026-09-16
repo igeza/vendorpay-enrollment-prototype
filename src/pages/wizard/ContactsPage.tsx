@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { MultiSelectDropdown } from "../../components/ui/MultiSelectDropdown"
@@ -65,6 +65,14 @@ export function ContactsPage() {
 
     demoRunningIds.current.delete(contactId)
   }
+
+  // Any contact row added after the first (which is filled via "Fill Billing Contact From
+  // Company Profile" instead) auto-fills itself as soon as it exists — no click required.
+  useEffect(() => {
+    contacts.forEach((c, i) => {
+      if (i > 0 && !c.firstName) runContactAutoFill(c.id)
+    })
+  }, [contacts])
 
   function setContacts(next: Contact[]) {
     update({ contacts: next })
@@ -162,7 +170,6 @@ export function ContactsPage() {
                     className="h-8 w-full rounded-sm border border-border-primary bg-input-fill px-xs text-sm outline-none focus:border-brand-blue"
                     value={c.firstName}
                     onChange={(e) => patchContact(c.id, { firstName: e.target.value })}
-                    onFocus={() => runContactAutoFill(c.id)}
                   />
                 </div>
                 <div className="min-w-0 px-sm">

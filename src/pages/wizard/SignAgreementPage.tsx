@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { WizardShell } from "../../components/WizardShell"
@@ -77,6 +77,10 @@ function SignatureModal({
     demoRunning.current = false
   }
 
+  useEffect(() => {
+    runAutoFill()
+  }, [])
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(76,76,76,0.5)]">
       <div className="flex w-[520px] flex-col gap-md rounded-sm bg-white p-xl shadow-[var(--shadow-dropshadow-lg)]">
@@ -86,7 +90,6 @@ function SignatureModal({
           label="Type your full name to sign"
           value={typedName}
           onChange={(e) => setTypedName(e.target.value)}
-          onFocus={() => runAutoFill()}
           placeholder="Full name"
         />
         {typedName && <div className="rounded-sm border border-border-primary bg-[#f5f8fa] p-md font-serif text-2xl italic text-brand-navy">{typedName}</div>}
@@ -183,6 +186,10 @@ export function SignAgreementPage() {
     demoRunning.current = false
   }
 
+  useEffect(() => {
+    runSignerAutoFill()
+  }, [])
+
   const signerValid = signer.firstName && signer.lastName && signer.email
   const initials = `${signer.firstName[0] ?? ""}${signer.lastName[0] ?? ""}`.toUpperCase()
 
@@ -253,7 +260,6 @@ export function SignAgreementPage() {
                 className="w-full"
                 value={signer.firstName}
                 onChange={(e) => setSigner("firstName", e.target.value)}
-                onFocus={() => runSignerAutoFill()}
               />
             </div>
             <div className="min-w-[150px] shrink basis-[248px]">
