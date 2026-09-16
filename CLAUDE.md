@@ -1,26 +1,15 @@
 ## Design System
 
-Check DESIGN.md before writing or editing any UI code. Use its exact values for
-color, spacing, radius, and typography — never approximate or round a listed
-number (e.g. use `padding: 16px`, not "roughly 16px" or a Tailwind class that's
-close but not exact). If a component isn't covered here, extend in the system's
-spirit per §10, not by inventing new values.
+Use the rmx-prototyping skill's design tokens for exact values (color,
+spacing, radius, typography) — no rounding or "close enough" Tailwind
+classes. Uncovered component → extend in the system's spirit, don't invent
+new values.
 
-## Shared components — canonical source, don't casually rewrite
+## Shared components — canonical, don't rewrite
 
-`src/components/ui/` (Button, Dropdown, DatePicker, Field, Controls,
-MultiSelectDropdown, InfoTooltip) plus `src/components/AppHeader.tsx` and
-`src/components/NavMenu.tsx` are the canonical, already-correct
-implementation of the design system's core components and app chrome. This
-is the source that `shared-ui-kit/` (exported for reuse in other projects)
-is copied from.
+`src/components/ui/`, `AppHeader.tsx`, `NavMenu.tsx` are canonical (source
+for `shared-ui-kit/`). Always import them; never redefine inline.
 
-- Always import from `src/components/ui/`, `AppHeader`, and `NavMenu` for
-  anything they already cover. Never redefine a button/dropdown/date
-  picker/header/nav menu/etc. inline elsewhere in the app.
-- Don't edit files in this folder as a side effect of an unrelated task
-  (e.g. while building a new page). If a real fix is needed here, call it
-  out explicitly and make the change deliberately.
-- After a deliberate, approved change to a component in this folder, re-run
-  the sync into `shared-ui-kit/` (see `shared-ui-kit/README.md`) so other
-  projects don't silently drift out of date.
+- Don't touch these files as a side effect of unrelated work — call it out
+  and make deliberate changes only.
+- After an approved change, re-sync `shared-ui-kit/` (see its README).

@@ -6,7 +6,7 @@ from a design spec (which is where drift and mistakes creep in). Instead, copy t
 folder in and import directly.
 
 **Source of truth:** VendorPay (`src/components/AppHeader.tsx`, `src/components/NavMenu.tsx`,
-`src/components/ui/`, `src/index.css`, `DESIGN.md`). This folder is a synced export of
+`src/components/ui/`, `src/index.css`). This folder is a synced export of
 those files, flattened for portability. If a component needs a real fix, fix it in
 VendorPay first, then re-copy — don't patch the copy in a downstream project and let
 it drift.
@@ -26,8 +26,10 @@ it drift.
   icons), matching the folder names the components expect.
 - `tokens.css` — the Tailwind v4 `@theme` block defining every color/spacing/radius
   variable the components rely on (`--color-brand-blue`, `--spacing-md`, etc.).
-- `DESIGN.md` — the full written spec (for anything not yet componentized, or for
-  extending the system consistently).
+
+For anything not yet componentized, or for extending the system consistently,
+use the rmx-prototyping skill's design tokens and references instead of a
+written spec here.
 
 ## Decoupling: AppHeader / NavMenu
 
@@ -53,10 +55,9 @@ plain optional props instead:
    `src/assets/`, preserving the `assets/shell/` and `assets/nav-menu/` subfolders.
 3. Copy the contents of `tokens.css` into your project's root CSS file, right
    after `@import "tailwindcss";`.
-4. Copy `DESIGN.md` into your project root.
-5. Wrap your app in a `<BrowserRouter>` (or equivalent) if it isn't already —
+4. Wrap your app in a `<BrowserRouter>` (or equivalent) if it isn't already —
    AppHeader/NavMenu need router context.
-6. Add the block below to your project's `CLAUDE.md` (create one if it doesn't
+5. Add the block below to your project's `CLAUDE.md` (create one if it doesn't
    exist).
 
 ## CLAUDE.md block to add in the new project
@@ -77,9 +78,9 @@ the design system exactly.
 - AppHeader and NavMenu take plain props for anything app-specific (see their
   JSDoc comments) — configure via props, don't fork the component to add
   app-specific behavior.
-- If a needed component doesn't exist yet, check DESIGN.md and build it to
-  match §10 (extending the system), then it can be promoted back to the
-  shared kit later.
+- If a needed component doesn't exist yet, use the rmx-prototyping skill's
+  design tokens and references to build it to match the system, then it can
+  be promoted back to the shared kit later.
 ```
 
 ## Keeping this in sync

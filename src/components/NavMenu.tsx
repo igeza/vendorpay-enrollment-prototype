@@ -163,31 +163,41 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
   }
 
   return createPortal(
-    <>
-      <div className="fixed inset-x-0 top-12 bottom-0 z-40 bg-[rgba(76,76,76,0.5)]" onClick={onClose} />
-      <div className="fixed left-2xl right-2xl top-16 z-50 mx-auto max-w-[1460px] overflow-hidden rounded-md border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
-        <div className="relative flex flex-col border-b border-border-primary px-lg">
-          <button type="button" aria-label="Close menu" onClick={onClose} className="absolute right-xs top-xs">
-            <img src={closeIcon} alt="" className="h-6 w-6" />
-          </button>
-          <div className="flex h-[72px] flex-wrap items-center gap-x-9xl gap-y-xs">
-            <div className="flex shrink-0 items-center gap-lg">
-              <img src={rmHouseLogo} alt="" className="h-8 w-8" />
-              <span className="text-2xl text-text-secondary">Menu</span>
-            </div>
-            <div className="flex flex-1 flex-wrap items-center gap-x-2xl gap-y-xs">
-              {TOP_NAV_ITEMS.map((item) => (
-                <span key={item.label} className="flex shrink-0 items-center gap-xs whitespace-nowrap text-sm text-text-secondary">
-                  <img src={item.icon} alt="" className="h-5 w-5" />
-                  {item.label}
-                </span>
-              ))}
-            </div>
+    <div
+      className="fixed inset-0 z-50 flex justify-center bg-[rgba(19,49,76,0.45)] px-xl pb-xl pt-5xl"
+      onClick={onClose}
+    >
+      <div
+        className="flex w-full max-w-[1320px] flex-col overflow-hidden rounded-md bg-white shadow-[0_8px_24px_rgba(19,49,76,0.3)]"
+        style={{ maxHeight: "calc(100vh - 80px)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex flex-none items-center gap-2xl border-b border-border-primary px-lg py-[14px]">
+          <div className="flex shrink-0 items-center gap-lg">
+            <img src={rmHouseLogo} alt="" className="h-10 w-10" />
+            <span className="whitespace-nowrap text-2xl text-text-secondary">Menu</span>
           </div>
+          <nav className="flex min-w-0 flex-1 flex-wrap items-center gap-x-xl gap-y-[10px]">
+            {TOP_NAV_ITEMS.map((item) => (
+              <span
+                key={item.label}
+                className={clsx(
+                  "flex shrink-0 items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary",
+                  item.label !== "Full Menu" && "cursor-default",
+                )}
+              >
+                <img src={item.icon} alt="" className="h-[18px] w-[18px]" />
+                {item.label}
+              </span>
+            ))}
+          </nav>
+          <button type="button" aria-label="Close menu" onClick={onClose} className="flex shrink-0 p-xxs text-[#0071aa]">
+            <img src={closeIcon} alt="" className="h-5 w-5" />
+          </button>
         </div>
 
-        <div className="relative flex h-[449px] items-stretch">
-          <div className="flex w-[212px] shrink-0 flex-col gap-sm overflow-y-auto border-r border-border-primary py-xs">
+        <div className="relative flex min-h-0 flex-1">
+          <div className="flex w-[200px] shrink-0 flex-col gap-sm border-r border-border-primary py-xs">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.key}
@@ -195,81 +205,79 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
                 disabled={cat.key !== "payables"}
                 onClick={() => setSelectedKey(cat.key)}
                 className={clsx(
-                  "flex h-7 shrink-0 items-center px-md text-left text-lg",
+                  "relative flex h-7 shrink-0 items-center px-md text-left text-lg",
                   cat.key === selectedKey
-                    ? "bg-[#0071aa] text-white"
+                    ? "w-[calc(100%+12px)] bg-[#0071aa] text-white"
                     : cat.key === "payables"
                       ? "text-[#0071aa] hover:bg-row-hover"
                       : "cursor-default text-[#0071aa]",
                 )}
               >
                 {cat.label}
+                {cat.key === selectedKey && (
+                  <img
+                    src={cornerIcon}
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -bottom-3 right-0 z-10 h-3 w-[13px]"
+                  />
+                )}
               </button>
             ))}
           </div>
 
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[212px] z-10 h-[40px] w-[13px]"
-            style={{ top: 8 + CATEGORIES.findIndex((c) => c.key === selectedKey) * 40 }}
-          >
-            <img src={cornerIcon} alt="" className="h-full w-full" />
-          </span>
-
-          <div className="flex min-w-0 flex-1 flex-col justify-between overflow-y-auto">
+          <div className="min-w-0 flex-1 overflow-y-auto">
             {selected.columns ? (
-              <div className="flex flex-wrap gap-xs py-sm pr-sm pl-[21px]">
+              <div className="flex flex-wrap content-start gap-xl px-xl py-lg">
                 {selected.columns.map((col) => (
-                  <div key={col.title} className="flex flex-col gap-xs px-xs py-md">
-                    <div className="border-b border-[#0071aa] pb-xxs">
-                      <span className="whitespace-nowrap text-sm font-semibold text-[#0071aa]">{col.title}</span>
-                    </div>
-                    <div className="flex flex-col gap-sm">
-                      {col.items
-                        .filter((item) => !(REQUIRES_ENROLLMENT.has(item.label) && !state.enrollmentComplete))
-                        .map((item) =>
-                          item.to ? (
-                            <button
-                              key={item.label}
-                              type="button"
-                              onClick={() => go(item)}
-                              className="-mx-xs whitespace-nowrap rounded-sm px-xs py-xxs text-left text-sm text-text-secondary hover:bg-hover-secondary"
-                            >
-                              {item.label}
-                            </button>
-                          ) : (
-                            <span key={item.label} className="whitespace-nowrap text-sm text-text-secondary">
-                              {item.label}
-                            </span>
-                          ),
-                        )}
-                    </div>
+                  <div key={col.title} className="flex flex-col">
+                    <span className="mb-[6px] whitespace-nowrap border-b border-[#0071aa] pb-[6px] text-sm text-[#0071aa]">
+                      {col.title}
+                    </span>
+                    {col.items
+                      .filter((item) => !(REQUIRES_ENROLLMENT.has(item.label) && !state.enrollmentComplete))
+                      .map((item) =>
+                        item.to ? (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={() => go(item)}
+                            className="whitespace-nowrap py-[6px] text-left text-sm text-text-secondary hover:text-[#0071aa]"
+                          >
+                            {item.label}
+                          </button>
+                        ) : (
+                          <span key={item.label} className="whitespace-nowrap py-[6px] text-sm text-text-secondary">
+                            {item.label}
+                          </span>
+                        ),
+                      )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="flex flex-1 items-center justify-center p-sm">
+              <div className="flex h-full items-center justify-center p-sm">
                 <span className="text-sm italic text-[#b3b3b3]">Not included in this prototype.</span>
               </div>
             )}
-
-            <div className="flex shrink-0 items-center justify-between px-md py-xxs">
-              <div className="flex items-center gap-xl">
-                <span className="flex items-center gap-xs p-xxxs text-sm text-text-secondary">
-                  <img src={settingsIcon} alt="" className="h-5 w-5" />
-                  {selected.setupLabel}
-                </span>
-                <span className="flex items-center gap-xs p-xxxs text-sm text-text-secondary">
-                  <img src={reportsIcon} alt="" className="h-5 w-5" />
-                  {selected.reportsLabel}
-                </span>
-              </div>
-              <span className="pr-md text-[13px] text-label-gray">Version 12.250907</span>
-            </div>
           </div>
         </div>
+
+        <div className="flex flex-none flex-wrap items-center justify-between gap-md border-t border-border-primary px-lg py-[10px]">
+          <div className="flex flex-wrap items-center gap-lg">
+            <span className="flex items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary">
+              <img src={settingsIcon} alt="" className="h-[18px] w-[18px]" />
+              {selected.setupLabel}
+            </span>
+            <span className="flex items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary">
+              <img src={reportsIcon} alt="" className="h-[18px] w-[18px]" />
+              {selected.reportsLabel}
+            </span>
+          </div>
+          <span className="whitespace-nowrap text-xs text-label-gray">Version 12.250907</span>
+        </div>
       </div>
-    </>,
+    </div>,
     document.body,
   )
 }
