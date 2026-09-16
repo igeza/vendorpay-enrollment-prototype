@@ -1,9 +1,13 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { Button } from "./ui/Button"
 import { VoidPaymentPopup } from "./VoidPaymentPopup"
 import { ConfirmVoidPopup } from "./ConfirmVoidPopup"
 import { usePayBills } from "../context/PayBillsContext"
+import { useWizard } from "../context/WizardContext"
+import { generateProofOfPaymentPdf } from "../utils/generateProofOfPaymentPdf"
+import { ProofOfPaymentModal } from "./ProofOfPaymentModal"
 import type { BatchPayment } from "../types/batches"
 import closeIcon from "../assets/splash/shell/overlay-close-icon.svg"
 import downloadIcon from "../assets/pay-bills/icon-download.svg"
@@ -37,10 +41,32 @@ export function PaymentDetailsModal({
   onClose: () => void
 }) {
   const { voidPayment } = usePayBills()
+  const { state: wizardState } = useWizard()
+  const navigate = useNavigate()
   const [showVoidWarning, setShowVoidWarning] = useState(false)
   const [showConfirmVoid, setShowConfirmVoid] = useState(false)
+  const [isGeneratingProof, setIsGeneratingProof] = useState(false)
+  const [proof, setProof] = useState<{ url: string; checkNumber: string } | null>(null)
 
   const isVoided = payment.status === "Voided"
+
+  async function handleDownloadProof() {
+    setIsGeneratingProof(true)
+    try {
+      const result = await generateProofOfPaymentPdf({
+        payerName: wizardState.company.companyName || "—",
+        payment,
+      })
+      setProof(result)
+    } finally {
+      setIsGeneratingProof(false)
+    }
+  }
+
+  function handleCloseProof() {
+    if (proof) URL.revokeObjectURL(proof.url)
+    setProof(null)
+  }
 
   function handleVoidClick() {
     if (payment.status === "Processing") {
@@ -70,9 +96,14 @@ export function PaymentDetailsModal({
           <div className="flex min-w-[420px] flex-1 flex-col overflow-hidden rounded-sm border border-border-primary bg-white">
             <div className="flex min-h-9 shrink-0 items-center justify-between border-b-2 border-brand-blue p-xs">
               <span className="text-sm font-semibold text-text-secondary">Payment Details</span>
-              <button type="button" className="flex items-center gap-xxs text-sm text-text-link hover:underline">
+              <button
+                type="button"
+                disabled={isGeneratingProof}
+                onClick={handleDownloadProof}
+                className="flex items-center gap-xxs text-sm text-text-link hover:underline disabled:opacity-50 disabled:no-underline"
+              >
                 <img src={downloadIcon} alt="" className="h-4 w-4" />
-                Download Proof of Payment
+                {isGeneratingProof ? "Generating…" : "Download Proof of Payment"}
               </button>
             </div>
 
@@ -134,7 +165,13 @@ export function PaymentDetailsModal({
                 {payment.breakdown.map((row, i) => (
                   <div key={i} className="flex h-9 items-center border-t border-border-primary bg-white">
                     <div className="flex-1 truncate px-xs text-sm text-text-primary">Check</div>
-                    <div className="flex-1 truncate px-xs text-sm text-text-link">{row.checkNumber}</div>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/check/${batchId}/${payment.id}/${row.checkNumber}`)}
+                      className="flex-1 truncate px-xs text-left text-sm text-text-link hover:underline"
+                    >
+                      {row.checkNumber}
+                    </button>
                     <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.status}</div>
                     <div className="flex-1 truncate px-xs text-right text-sm text-text-primary">{formatMoney(row.amount)}</div>
                     <div className="flex-1 truncate px-xs text-sm text-text-primary">{row.postingDate}</div>
@@ -211,6 +248,7 @@ export function PaymentDetailsModal({
           onAccept={handleAcceptVoid}
         />
       )}
+      {proof && <ProofOfPaymentModal pdfUrl={proof.url} checkNumber={proof.checkNumber} onClose={handleCloseProof} />}
     </div>
   )
 }
