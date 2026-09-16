@@ -59,13 +59,13 @@ export function AppHeader() {
       <div className="flex flex-1 items-center justify-end gap-2xl">
         <div className="flex flex-col leading-tight">
           <span className="text-xs">Company Code</span>
-          <span className="text-sm">lcs-rmexpress</span>
+          <span className="text-sm">class60</span>
         </div>
         <div className="flex items-center gap-lg">
           <button type="button" aria-label="Notifications">
             <img src={notificationsIcon} alt="" className="h-5 w-5" />
           </button>
-          <div className="flex h-8 w-8 items-center justify-center rounded-round bg-brand-blue text-sm">TL</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-round bg-brand-blue text-sm">CA</div>
         </div>
       </div>
 

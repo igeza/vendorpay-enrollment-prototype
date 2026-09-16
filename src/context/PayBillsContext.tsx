@@ -107,7 +107,7 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
     if (posted.length > 0) {
       const newBatch: Batch = {
         id: nextBatchId(),
-        createdBy: "tlittle",
+        createdBy: "capegian",
         dateCreated: todayMMDDYYYY(),
         status: "Processing",
         payments: posted.map((p) =>
@@ -144,7 +144,7 @@ export function PayBillsProvider({ children }: { children: ReactNode }) {
                       breakdown: p.breakdown.map((row) => ({ ...row, status: "Voided" })),
                       history: [
                         ...p.history,
-                        { description: "Payment Voided", comment: "Voided", user: "tlittle", time: nowTimeString() },
+                        { description: "Payment Voided", comment: "Voided", user: "capegian", time: nowTimeString() },
                       ],
                     },
               ),
