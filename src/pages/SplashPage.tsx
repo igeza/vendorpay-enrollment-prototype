@@ -4,6 +4,8 @@ import { Button } from "../components/ui/Button"
 import { RMXBackground } from "../components/RMXBackground"
 import { AppHeader } from "../components/AppHeader"
 import { EnrollmentGuideModal } from "../components/EnrollmentGuideModal"
+import { useWizard } from "../context/WizardContext"
+import { initialWizardState } from "../types"
 import heroIllustration from "../assets/splash/hero-illustration.png"
 import bulletDot from "../assets/splash/bullet-dot.svg"
 import poweredByLogo from "../assets/shell/powered-by-avidxchange.svg"
@@ -12,7 +14,14 @@ import helpIcon from "../assets/shell/help.svg"
 
 export function SplashPage() {
   const navigate = useNavigate()
+  const { update } = useWizard()
   const [showGuide, setShowGuide] = useState(false)
+
+  /** Presentation shortcut: skip the wizard entirely and unlock the post-enrollment pages. */
+  function skipToEnrolled() {
+    update({ ...initialWizardState, enrollmentComplete: true })
+    navigate("/vendorpay-batches")
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -29,7 +38,7 @@ export function SplashPage() {
           <button type="button" aria-label="Refresh">
             <img src={autorenewIcon} alt="" className="h-5 w-5" />
           </button>
-          <button type="button" aria-label="Help">
+          <button type="button" aria-label="Help" onClick={skipToEnrolled}>
             <img src={helpIcon} alt="" className="h-5 w-5" />
           </button>
         </div>
