@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Stepper } from "./Stepper"
 import { Button } from "./ui/Button"
 import { useWizard } from "../context/WizardContext"
-import type { StepKey } from "../types"
+import { initialWizardState, type StepKey } from "../types"
 import helpIcon from "../assets/splash/shell/overlay-help-icon.svg"
 import closeIcon from "../assets/splash/shell/overlay-close-icon.svg"
 
@@ -29,13 +29,19 @@ export function WizardShell({
   nextDisabled,
 }: WizardShellProps) {
   const navigate = useNavigate()
-  const { reset } = useWizard()
+  const { reset, update } = useWizard()
+
+  /** Presentation shortcut: skip the rest of the wizard, as if Finish was clicked on Next Steps. */
+  function skipToEnrolled() {
+    update({ ...initialWizardState, enrollmentComplete: true })
+    navigate("/bank-accounts")
+  }
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(76,76,76,0.5)] p-xl">
       <div className="flex h-full max-h-[920px] w-full max-w-[1840px] flex-col overflow-hidden rounded-sm bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <header className="flex h-12 shrink-0 items-center justify-end gap-md border-b border-border-primary bg-white px-lg">
-          <button aria-label="Help">
+          <button aria-label="Help" onClick={skipToEnrolled}>
             <img src={helpIcon} alt="" className="h-6 w-6" />
           </button>
           <button
