@@ -1,7 +1,15 @@
 ## Design System
 
-Check DESIGN.md before writing or editing any UI code. Use its exact values for
-color, spacing, radius, and typography — never approximate or round a listed
-number (e.g. use `padding: 16px`, not "roughly 16px" or a Tailwind class that's
-close but not exact). If a component isn't covered here, extend in the system's
-spirit per §10, not by inventing new values.
+Use the rmx-prototyping skill's design tokens for exact values (color,
+spacing, radius, typography) — no rounding or "close enough" Tailwind
+classes. Uncovered component → extend in the system's spirit, don't invent
+new values.
+
+## Shared components — canonical, don't rewrite
+
+`src/components/ui/`, `AppHeader.tsx`, `NavMenu.tsx` are canonical (source
+for `shared-ui-kit/`). Always import them; never redefine inline.
+
+- Don't touch these files as a side effect of unrelated work — call it out
+  and make deliberate changes only.
+- After an approved change, re-sync `shared-ui-kit/` (see its README).

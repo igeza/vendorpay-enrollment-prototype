@@ -1,9 +1,10 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { WizardShell } from "../../components/WizardShell"
 import { Dropdown } from "../../components/ui/Dropdown"
 import { Checkbox } from "../../components/ui/Controls"
+import { InfoTooltip } from "../../components/ui/InfoTooltip"
 import { useWizard } from "../../context/WizardContext"
 import type { BankAccount } from "../../types"
 import searchIcon from "../../assets/choose-banks/icon-search-gray.svg"
@@ -13,6 +14,7 @@ import eyeIconDisabled from "../../assets/choose-banks/icon-visibility-eye-disab
 import infoIcon from "../../assets/choose-banks/icon-info.svg"
 
 const OWNER_TYPES: BankAccount["ownerType"][] = ["Business", "Individual"]
+const PAYER_NAME_OPTIONS = ["Company Name", "Property Name", "Custom Name"]
 
 const MICR_DATA: Record<string, { routingNumber: string; accountNumber: string }> = {
   "1000 Fifth Third": { routingNumber: "584267951", accountNumber: "8834215489" },
@@ -48,10 +50,24 @@ export function ChooseBanksPage() {
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
   const [revealed, setRevealed] = useState<Record<string, boolean>>({})
+  const [customPayerIds, setCustomPayerIds] = useState<Set<string>>(
+    () => new Set(state.banks.filter((b) => b.payerName && !PAYER_NAME_OPTIONS.includes(b.payerName)).map((b) => b.id)),
+  )
   const demoRunning = useRef(false)
+  const ownerNameRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const ownerTypeRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const payerNameRefs = useRef<Record<string, HTMLButtonElement | HTMLInputElement | null>>({})
 
   const banks = state.banks
-  const payerOptions = [state.company.legalCompanyName, state.company.dba].filter(Boolean)
+
+  function setCustomPayerMode(id: string, custom: boolean) {
+    setCustomPayerIds((prev) => {
+      const next = new Set(prev)
+      if (custom) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
 
   function patchBank(id: string, patch: Partial<BankAccount>) {
     update({ banks: banks.map((b) => (b.id === id ? { ...b, ...patch } : b)) })
@@ -78,6 +94,7 @@ export function ChooseBanksPage() {
       const idx = next.findIndex((b) => b.id === row.id)
       const demo = OWNER_DEMO_DATA[row.bankName]
 
+      ownerNameRefs.current[row.id]?.focus()
       for (let i = 1; i <= demo.ownerName.length; i++) {
         next[idx] = { ...next[idx], ownerName: demo.ownerName.slice(0, i) }
         update({ banks: next.map((b) => ({ ...b })) })
@@ -85,10 +102,12 @@ export function ChooseBanksPage() {
       }
       await delay(150)
 
+      ownerTypeRefs.current[row.id]?.focus()
       await delay(200)
       next[idx] = { ...next[idx], ownerType: demo.ownerType }
       update({ banks: next.map((b) => ({ ...b })) })
 
+      payerNameRefs.current[row.id]?.focus()
       await delay(200)
       next[idx] = { ...next[idx], payerName: demo.payerName }
       update({ banks: next.map((b) => ({ ...b })) })
@@ -97,6 +116,11 @@ export function ChooseBanksPage() {
 
     demoRunning.current = false
   }
+
+  // As soon as any bank row is selected (and still missing owner info), fill it automatically.
+  useEffect(() => {
+    runOwnerAutoFill()
+  }, [banks])
 
   const filtered = banks.filter((b) => b.bankName.toLowerCase().includes(query.toLowerCase()))
   const allFilteredSelected = filtered.length > 0 && filtered.every((b) => b.selected)
@@ -118,7 +142,6 @@ export function ChooseBanksPage() {
       onBack={() => navigate("/enroll/contacts")}
       onNext={() => navigate("/enroll/sign-agreement")}
       nextDisabled={!canProceed}
-      onSaveForLater={() => navigate("/")}
     >
       <div className="flex flex-col gap-md">
         <div className="flex items-center gap-md">
@@ -128,7 +151,7 @@ export function ChooseBanksPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Find a bank account"
-              className="h-9 w-full rounded-sm border border-border-primary bg-input-fill pl-8 pr-sm text-sm outline-none focus:border-brand-blue"
+              className="h-9 w-full rounded-sm border border-brand-blue bg-white pl-8 pr-sm text-sm outline-none placeholder:italic placeholder:text-[#b3b3b3] focus:border-brand-blue"
             />
           </div>
           <button type="button" onClick={fillRoutingFromMicr} className="text-sm font-normal text-text-link hover:underline">
@@ -146,11 +169,21 @@ export function ChooseBanksPage() {
               <div className="flex h-7 flex-1 items-center truncate px-xs">Routing Number</div>
               <div className="flex h-7 flex-1 items-center truncate px-xs">Account Number</div>
               <div className="flex h-7 flex-1 items-center gap-xs truncate pl-xs">
-                Owner Name <img src={infoIcon} alt="" className="h-6 w-6 shrink-0" />
+                Owner Name
+                <InfoTooltip
+                  text="Enter the name of the individual or business that owns the bank account."
+                  icon={infoIcon}
+                  iconClassName="h-6 w-6 shrink-0"
+                />
               </div>
               <div className="flex h-7 flex-1 items-center truncate px-xs">Owner Type</div>
               <div className="flex h-7 flex-1 items-center gap-xs truncate pl-xs">
-                Payer Name <img src={infoIcon} alt="" className="h-6 w-6 shrink-0" />
+                Payer Name
+                <InfoTooltip
+                  text="The name that displays on payments sent to vendors through VendorPay."
+                  icon={infoIcon}
+                  iconClassName="h-6 w-6 shrink-0"
+                />
               </div>
             </div>
 
@@ -209,6 +242,9 @@ export function ChooseBanksPage() {
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
                   <input
+                    ref={(el) => {
+                      ownerNameRefs.current[b.id] = el
+                    }}
                     disabled={!b.selected}
                     className={clsx(
                       "h-8 w-full rounded-sm border px-xs text-sm outline-none",
@@ -218,11 +254,13 @@ export function ChooseBanksPage() {
                     )}
                     value={b.ownerName}
                     onChange={(e) => patchBank(b.id, { ownerName: e.target.value })}
-                    onFocus={() => runOwnerAutoFill()}
                   />
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
                   <Dropdown
+                    ref={(el) => {
+                      ownerTypeRefs.current[b.id] = el
+                    }}
                     size="compact"
                     disabled={!b.selected}
                     placeholder=""
@@ -232,14 +270,45 @@ export function ChooseBanksPage() {
                   />
                 </div>
                 <div className="min-w-0 flex-1 py-[2px] pl-xs pr-md">
-                  <Dropdown
-                    size="compact"
-                    disabled={!b.selected}
-                    placeholder=""
-                    options={payerOptions.length ? payerOptions : ["Main Operating Account"]}
-                    value={b.payerName}
-                    onChange={(v) => patchBank(b.id, { payerName: v })}
-                  />
+                  {customPayerIds.has(b.id) ? (
+                    <input
+                      ref={(el) => {
+                        payerNameRefs.current[b.id] = el
+                      }}
+                      disabled={!b.selected}
+                      placeholder="Type a custom name"
+                      value={b.payerName}
+                      onChange={(e) => patchBank(b.id, { payerName: e.target.value })}
+                      onBlur={() => {
+                        if (!b.payerName) setCustomPayerMode(b.id, false)
+                      }}
+                      className={clsx(
+                        "h-8 w-full rounded-sm border px-xs text-sm outline-none",
+                        b.selected
+                          ? "border-border-primary bg-input-fill text-text-primary focus:border-brand-blue"
+                          : "border-border-disabled bg-[#f8f8f8] text-[#b3b3b3]",
+                      )}
+                    />
+                  ) : (
+                    <Dropdown
+                      ref={(el) => {
+                        payerNameRefs.current[b.id] = el
+                      }}
+                      size="compact"
+                      disabled={!b.selected}
+                      placeholder=""
+                      options={PAYER_NAME_OPTIONS}
+                      value={b.payerName}
+                      onChange={(v) => {
+                        if (v === "Custom Name") {
+                          setCustomPayerMode(b.id, true)
+                          patchBank(b.id, { payerName: "" })
+                        } else {
+                          patchBank(b.id, { payerName: v })
+                        }
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             ))}

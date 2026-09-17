@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState, type Ref } from "react"
 import clsx from "clsx"
 import chevronDownIcon from "../../assets/shell/keyboard-arrow-down.svg"
 import chevronDownDisabledIcon from "../../assets/shell/keyboard-arrow-down-disabled.svg"
@@ -16,6 +16,7 @@ interface DropdownProps {
   className?: string
   labelIcon?: React.ReactNode
   size?: "default" | "compact"
+  ref?: Ref<HTMLButtonElement>
 }
 
 /** RMX-style dropdown trigger + floating panel — never a native <select>. */
@@ -27,11 +28,12 @@ export function Dropdown({
   options,
   value,
   onChange,
-  placeholder = "Select…",
+  placeholder = "",
   disabled,
   className,
   labelIcon,
   size = "default",
+  ref,
 }: DropdownProps) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -65,6 +67,7 @@ export function Dropdown({
       <div className="relative">
         <button
           id={id}
+          ref={ref}
           type="button"
           disabled={disabled}
           onClick={() => setOpen((o) => !o)}
@@ -74,7 +77,7 @@ export function Dropdown({
             disabled
               ? "cursor-not-allowed border-border-disabled bg-[#f8f8f8] text-[#b3b3b3]"
               : clsx(
-                  "bg-input-fill text-text-primary hover:border-brand-blue/60",
+                  "bg-input-fill text-text-primary hover:border-brand-blue/60 focus:border-brand-blue",
                   error ? "border-error" : open ? "border-brand-blue" : "border-border-primary",
                 ),
           )}
@@ -91,7 +94,7 @@ export function Dropdown({
         </button>
 
         {open && !disabled && (
-          <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 max-h-64 overflow-y-auto rounded-sm bg-white shadow-[0px_3px_6px_0px_rgba(0,0,0,0.15)]">
+          <div className="absolute left-0 top-[calc(100%+4px)] z-50 max-h-64 w-max min-w-full max-w-[320px] overflow-y-auto rounded-sm bg-white shadow-[0px_3px_6px_0px_rgba(0,0,0,0.15)]">
             {options.map((opt) => (
               <button
                 key={opt}
@@ -101,7 +104,7 @@ export function Dropdown({
                   setOpen(false)
                 }}
                 className={clsx(
-                  "flex h-9 w-full items-center px-sm text-left text-sm",
+                  "flex h-9 w-full items-center truncate whitespace-nowrap px-sm text-left text-sm",
                   opt === value ? "bg-brand-blue text-white" : "text-text-primary hover:bg-[#f5f8fa]",
                 )}
               >

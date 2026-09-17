@@ -112,6 +112,7 @@ export interface WizardState {
   agreementSignatureText: string
   agreementSigned: boolean
   agreementFinished: boolean
+  enrollmentComplete: boolean
 }
 
 export const WIZARD_STEPS = [
@@ -140,11 +141,11 @@ export const emptyCompanyInfo: CompanyInfo = {
   city: "",
   state: "",
   postalCode: "",
-  hasLegalProceedings: "",
+  hasLegalProceedings: "no",
   legalProceedingsDetails: "",
-  hasBankruptcy: "",
+  hasBankruptcy: "no",
   bankruptcyDetails: "",
-  hasCriminalHistory: "",
+  hasCriminalHistory: "no",
   criminalHistoryDetails: "",
 }
 
@@ -165,7 +166,7 @@ export const emptyControlPerson: ControlPerson = {
   previousState: "",
   previousZip: "",
   previousCountry: "",
-  livedAtOtherAddress: "",
+  livedAtOtherAddress: "no",
   previous2AddressLine1: "",
   previous2City: "",
   previous2State: "",
@@ -195,7 +196,7 @@ export const SEED_BANKS: BankAccount[] = [
 export const initialWizardState: WizardState = {
   company: emptyCompanyInfo,
   controlPerson: emptyControlPerson,
-  hasBeneficialOwners: "",
+  hasBeneficialOwners: "no",
   beneficialOwners: [],
   contacts: [],
   banks: SEED_BANKS,
@@ -204,6 +205,7 @@ export const initialWizardState: WizardState = {
   agreementSignatureText: "",
   agreementSigned: false,
   agreementFinished: false,
+  enrollmentComplete: false,
 }
 
 export function makeId() {

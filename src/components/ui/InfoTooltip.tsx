@@ -4,8 +4,15 @@ import infoIcon from "../../assets/company-info/icon-info-tooltip.svg"
 
 const TOOLTIP_WIDTH = 312
 
+interface InfoTooltipProps {
+  text: string
+  /** Override the default blue field-label icon, e.g. for a white icon on a dark register header. */
+  icon?: string
+  iconClassName?: string
+}
+
 /** Info icon that reveals a descriptive tooltip on hover/focus, next to a field label. */
-export function InfoTooltip({ text }: { text: string }) {
+export function InfoTooltip({ text, icon, iconClassName }: InfoTooltipProps) {
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -39,7 +46,7 @@ export function InfoTooltip({ text }: { text: string }) {
         onBlur={() => setOpen(false)}
         className="inline-flex"
       >
-        <img src={infoIcon} alt="" className="h-4 w-4" />
+        <img src={icon ?? infoIcon} alt="" className={iconClassName ?? "h-4 w-4"} />
       </button>
       {open &&
         createPortal(

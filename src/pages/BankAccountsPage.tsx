@@ -119,7 +119,7 @@ export function BankAccountsPage() {
   const editingRecord = banks.find((b) => b.bankName === editingBank)
 
   return (
-    <div className="min-h-screen bg-[#f3f4f8]">
+    <div className="flex min-h-screen flex-col bg-[#f3f4f8]">
       <AppHeader />
       <div className="flex h-10 items-center justify-between bg-brand-blue px-md py-xs text-white">
         <div className="flex items-center gap-sm">
@@ -142,7 +142,7 @@ export function BankAccountsPage() {
         </div>
       </div>
 
-      <div className="p-md">
+      <div className="flex min-h-0 flex-1 flex-col p-md">
         <div className="flex items-center justify-between">
           <div className="relative w-[248px]">
             <img src={searchIcon} alt="" className="pointer-events-none absolute left-sm top-1/2 h-5 w-5 -translate-y-1/2" />
@@ -180,41 +180,35 @@ export function BankAccountsPage() {
           </button>
         </div>
 
-        <div className="mt-md overflow-x-auto rounded-sm border border-border-primary bg-white">
+        <div className="mt-md flex-1 overflow-x-auto rounded-sm border border-border-primary bg-white">
           <div className="min-w-[1100px]">
             <div className="flex bg-[#737373] text-[12.6px] font-medium tracking-[1.134px] text-white">
-              <div className="flex h-7 w-[68px] shrink-0 items-center justify-center px-xs">Enabled</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Bank Account</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Routing Number</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Account Number</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Owner Name</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Owner Type</div>
-              <div className="flex h-7 flex-1 items-center px-xs">Payer Name</div>
+              <div className="flex h-7 w-[68px] shrink-0 items-center justify-center truncate px-xs">Enabled</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Bank Account</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Routing Number</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Account Number</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Owner Name</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Owner Type</div>
+              <div className="flex h-7 min-w-0 flex-1 items-center truncate px-xs">Payer Name</div>
               <div className="h-7 w-9 shrink-0" />
             </div>
 
             {visibleBanks.map((b) => (
-              <div key={b.bankName} className="flex h-9 items-center border-t border-border-primary bg-white">
+              <div
+                key={b.bankName}
+                onClick={() => setEditingBank(b.bankName)}
+                className="flex h-9 cursor-pointer items-center border-t border-border-primary bg-white hover:bg-row-hover"
+              >
                 <div className="flex w-[68px] shrink-0 items-center justify-center px-xs">
-                  {b.enabled ? (
-                    <img src={checkCircleIcon} alt="Enabled" className="h-5 w-5" />
-                  ) : (
-                    <span className="h-5 w-5 rounded-round border-2 border-[#b3b3b3]" />
-                  )}
+                  {b.enabled && <img src={checkCircleIcon} alt="Enabled" className="h-5 w-5" />}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setEditingBank(b.bankName)}
-                  className="flex-1 truncate px-xs text-left text-sm text-text-primary"
-                >
-                  {b.bankName}
-                </button>
+                <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.bankName}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.routingNumber}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.accountNumber}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.ownerName}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.ownerType}</div>
                 <div className="flex-1 truncate px-xs text-sm text-text-primary">{b.payerName}</div>
-                <div className="flex w-9 shrink-0 items-center justify-center px-xs">
+                <div className="flex w-9 shrink-0 items-center justify-center px-xs" onClick={(e) => e.stopPropagation()}>
                   <KebabMenu enabled={b.enabled} onToggleEnabled={() => toggleEnabled(b.bankName)} />
                 </div>
               </div>
