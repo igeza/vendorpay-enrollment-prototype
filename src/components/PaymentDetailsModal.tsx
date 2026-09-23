@@ -187,7 +187,7 @@ export function PaymentDetailsModal({
 
           <div className="flex min-w-[420px] flex-1 flex-col overflow-hidden rounded-sm border border-border-primary bg-white">
             <div className="flex min-h-9 shrink-0 items-center border-b-2 border-brand-blue p-xs">
-              <span className="text-sm font-semibold text-text-secondary">Payment History</span>
+              <span className="text-sm font-semibold text-text-secondary">VendorPay Tracking</span>
             </div>
             <div className="p-md">
               <div className="overflow-hidden rounded-sm border border-border-primary">

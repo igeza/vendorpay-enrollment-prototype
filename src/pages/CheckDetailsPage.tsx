@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { AppHeader } from "../components/AppHeader"
+import { Button } from "../components/ui/Button"
 import { Dropdown } from "../components/ui/Dropdown"
 import { Checkbox } from "../components/ui/Controls"
 import { ClearedCheckModal } from "../components/ClearedCheckModal"
@@ -167,14 +168,22 @@ export function CheckDetailsPage() {
             </div>
 
             {/* Tile 2: VendorPay status + attachments */}
-            <div className="flex w-full flex-1 flex-col overflow-hidden rounded-sm border border-border-primary bg-white min-[1900px]:min-w-[602px]">
+            <div className="flex w-full flex-col overflow-hidden rounded-sm border border-border-primary bg-white min-[1900px]:w-[602px] min-[1900px]:shrink-0">
               <div className="h-[4px] shrink-0 bg-brand-navy" />
               <div className="flex flex-col gap-md p-md">
-                <div className="flex items-center gap-xs text-sm">
+                <div className="relative flex items-center gap-xs text-sm">
                   <span className="font-bold text-brand-navy">Check pays a bill</span>
                   <button type="button" className="font-normal text-text-link hover:underline">
                     Invoice #{invoiceShort}
                   </button>
+                  <div className="absolute right-0 top-1/2 flex -translate-y-1/2 items-center gap-xs">
+                    <Button variant="primary" className="h-7 px-sm">
+                      Stop
+                    </Button>
+                    <Button variant="primary" className="h-7 px-sm">
+                      Void
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-xs">
