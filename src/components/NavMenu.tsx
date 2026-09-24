@@ -132,10 +132,10 @@ const CATEGORIES: MenuCategory[] = [
 /** These links stay inert until enrollment is finished, matching Rent Manager's staged-rollout convention. */
 const REQUIRES_ENROLLMENT = new Set(["VendorPay Batches"])
 
-const TOP_NAV_ITEMS = [
+const TOP_NAV_ITEMS: { icon: string; label: string; to?: string }[] = [
   { icon: workspaceIcon, label: "Workspace" },
   { icon: dashboardIcon, label: "Dashboard" },
-  { icon: adminIcon, label: "Administration" },
+  { icon: adminIcon, label: "Administration", to: "/admin" },
   { icon: fullMenuIcon, label: "Full Menu" },
   { icon: searchIcon, label: "Search" },
   { icon: helpIcon, label: "Help" },
@@ -178,18 +178,30 @@ export function NavMenu({ onClose }: { onClose: () => void }) {
             <span className="whitespace-nowrap text-2xl text-text-secondary">Menu</span>
           </div>
           <nav className="flex min-w-0 flex-1 flex-wrap items-center gap-x-xl gap-y-[10px]">
-            {TOP_NAV_ITEMS.map((item) => (
-              <span
-                key={item.label}
-                className={clsx(
-                  "flex shrink-0 items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary",
-                  item.label !== "Full Menu" && "cursor-default",
-                )}
-              >
-                <img src={item.icon} alt="" className="h-[18px] w-[18px]" />
-                {item.label}
-              </span>
-            ))}
+            {TOP_NAV_ITEMS.map((item) =>
+              item.to ? (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => go(item)}
+                  className="flex shrink-0 items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary hover:text-text-link"
+                >
+                  <img src={item.icon} alt="" className="h-[18px] w-[18px]" />
+                  {item.label}
+                </button>
+              ) : (
+                <span
+                  key={item.label}
+                  className={clsx(
+                    "flex shrink-0 items-center gap-[6px] whitespace-nowrap text-sm text-text-secondary",
+                    item.label !== "Full Menu" && "cursor-default",
+                  )}
+                >
+                  <img src={item.icon} alt="" className="h-[18px] w-[18px]" />
+                  {item.label}
+                </span>
+              ),
+            )}
           </nav>
           <button type="button" aria-label="Close menu" onClick={onClose} className="flex shrink-0 p-xxs text-[#0071aa]">
             <img src={closeIcon} alt="" className="h-5 w-5" />

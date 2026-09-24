@@ -15,6 +15,7 @@ import { PayBillsPage } from "./pages/PayBillsPage"
 import { PostVendorPayPage } from "./pages/PostVendorPayPage"
 import { VendorPayBatchesPage } from "./pages/VendorPayBatchesPage"
 import { CheckDetailsPage } from "./pages/CheckDetailsPage"
+import { AdminPage } from "./pages/AdminPage"
 
 function EnrollLayout() {
   return (
@@ -57,6 +58,7 @@ export default function App() {
             <Route path="/bank-accounts" element={<BankAccountsPage />} />
             <Route path="/pay-bills" element={<PayBillsPage />} />
             <Route path="/post-vendorpay" element={<PostVendorPayPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="/check/:batchId/:paymentId/:checkNumber" element={<CheckDetailsPage />} />
             <Route
               path="/vendorpay-batches"
