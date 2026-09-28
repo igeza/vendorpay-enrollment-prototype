@@ -15,7 +15,7 @@ const TIPS = [
   {
     icon: iconVendors,
     title: "Update vendor payment methods",
-    body: "We recommend updating the payment method for each vendor to 'VendorPay.'",
+    body: "All Vendor pay methods will be updated to VendorPay by default. You can manage exceptions if needed.",
     link: "Update Payment Methods",
     action: "manageExceptions" as const,
   },

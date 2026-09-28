@@ -1,8 +1,7 @@
 {
   "permissions": {
     "deny": [
-      "Read(docs/**)",
-      "Read(dist-artifact/**)"
+      "Read(docs/**)"
     ]
   }
 }
