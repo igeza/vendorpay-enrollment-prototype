@@ -155,7 +155,7 @@ export function ChooseBanksPage() {
             type="button"
             onClick={fillRoutingFromMicr}
             disabled={!selected.length}
-            className="text-sm font-normal text-text-link enabled:hover:underline disabled:cursor-not-allowed disabled:text-[#b3b3b3]"
+            className="text-sm font-normal text-text-link enabled:hover:underline disabled:cursor-not-allowed disabled:text-text-link/50"
           >
             Fill Routing &amp; Account # From MICR for Selected Accounts
           </button>
