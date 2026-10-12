@@ -11,7 +11,7 @@ const ITEMS = [
   {
     icon: iconVendors,
     title: "Update vendor payment methods",
-    body: "We recommend updating the payment method for each vendor to 'VendorPay.'",
+    body: "All Vendor pay methods will be updated to VendorPay by default. You can manage exceptions if needed.",
     link: "Update Payment Methods",
     action: "manageExceptions" as const,
   },
@@ -37,14 +37,14 @@ export function ResourceGuideModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(76,76,76,0.5)]">
-      <div className="flex w-[560px] flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
+      <div className="flex w-[960px] max-w-full flex-col overflow-hidden rounded-sm border border-border-primary bg-white shadow-[var(--shadow-dropshadow-lg)]">
         <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-primary px-md py-xs">
           <h1 className="text-[20px] leading-[28px] font-normal text-text-primary">Resource Guide</h1>
           <div className="flex items-center gap-xs">
-            <button aria-label="Help" className="opacity-70 hover:opacity-100">
+            <button aria-label="Help">
               <img src={helpIcon} alt="" className="h-6 w-6" />
             </button>
-            <button aria-label="Close" className="opacity-70 hover:opacity-100" onClick={onClose}>
+            <button aria-label="Close" onClick={onClose}>
               <img src={closeIcon} alt="" className="h-6 w-6" />
             </button>
           </div>

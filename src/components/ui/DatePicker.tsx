@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useId, useLayoutEffect, useRef, useState, type Ref, type RefObject } from "react"
 import { createPortal } from "react-dom"
 import clsx from "clsx"
 import calendarIcon from "../../assets/beneficial-owners/calendar-today.svg"
@@ -20,6 +20,16 @@ interface DatePickerProps {
   className?: string
   labelIcon?: React.ReactNode
   disabled?: boolean
+  ref?: Ref<HTMLButtonElement>
+}
+
+/** Attaches a DOM node to both an internal callback and an externally-passed ref. */
+function mergeRefs<T>(internal: RefObject<T | null>, external: Ref<T> | undefined) {
+  return (node: T | null) => {
+    internal.current = node
+    if (typeof external === "function") external(node)
+    else if (external) (external as RefObject<T | null>).current = node
+  }
 }
 
 function toISO(y: number, m: number, d: number) {
@@ -38,7 +48,7 @@ function formatDisplay(value: string) {
   return `${(parsed.m + 1).toString().padStart(2, "0")}/${parsed.d.toString().padStart(2, "0")}/${parsed.y}`
 }
 
-export function DatePicker({ label, required, helperText, error, value, onChange, className, labelIcon, disabled }: DatePickerProps) {
+export function DatePicker({ label, required, helperText, error, value, onChange, className, labelIcon, disabled, ref }: DatePickerProps) {
   const [open, setOpen] = useState(false)
   const today = new Date()
   const selected = parseISO(value)
@@ -158,7 +168,7 @@ export function DatePicker({ label, required, helperText, error, value, onChange
       <div className="relative">
         <button
           id={id}
-          ref={triggerRef}
+          ref={mergeRefs(triggerRef, ref)}
           type="button"
           disabled={disabled}
           onClick={openPicker}
@@ -167,7 +177,7 @@ export function DatePicker({ label, required, helperText, error, value, onChange
             disabled
               ? "cursor-not-allowed border-border-disabled bg-[#f8f8f8] text-[#b3b3b3]"
               : clsx(
-                  "bg-input-fill text-text-primary hover:border-brand-blue/60",
+                  "bg-input-fill text-text-primary hover:border-brand-blue/60 focus:border-brand-blue",
                   error ? "border-error" : open ? "border-brand-blue" : "border-border-primary",
                 ),
           )}

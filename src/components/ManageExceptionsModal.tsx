@@ -50,10 +50,10 @@ export function ManageExceptionsModal({ onClose }: { onClose: () => void }) {
         <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-primary px-md py-xs">
           <h1 className="text-[20px] leading-[28px] font-normal text-text-primary">Manage Exceptions</h1>
           <div className="flex items-center gap-xs">
-            <button aria-label="Help" className="opacity-70 hover:opacity-100">
+            <button aria-label="Help">
               <img src={helpIcon} alt="" className="h-6 w-6" />
             </button>
-            <button aria-label="Close" className="opacity-70 hover:opacity-100" onClick={onClose}>
+            <button aria-label="Close" onClick={onClose}>
               <img src={closeIcon} alt="" className="h-6 w-6" />
             </button>
           </div>
@@ -77,7 +77,7 @@ export function ManageExceptionsModal({ onClose }: { onClose: () => void }) {
           <div className="flex min-h-0 flex-1 flex-col rounded-sm border border-border-primary">
             <div className="flex shrink-0 items-center bg-[#737373]">
               <div className="flex h-7 w-9 items-center justify-center">
-                <Checkbox label="" variant="register" checked={allFilteredExcluded} onChange={toggleAll} />
+                <Checkbox label="" checked={allFilteredExcluded} onChange={toggleAll} />
               </div>
               <div className="flex h-7 flex-1 items-center px-xs text-[12.6px] font-normal tracking-[1.134px] text-white">Vendor</div>
             </div>
@@ -88,7 +88,6 @@ export function ManageExceptionsModal({ onClose }: { onClose: () => void }) {
                   <div className="flex h-full w-9 items-center justify-center">
                     <Checkbox
                       label=""
-                      variant="register"
                       checked={excluded.has(vendor)}
                       onChange={(checked) => toggleVendor(vendor, checked)}
                     />

@@ -1,10 +1,11 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { WizardShell } from "../../components/WizardShell"
 import { TextField } from "../../components/ui/Field"
 import { Dropdown } from "../../components/ui/Dropdown"
 import { DatePicker } from "../../components/ui/DatePicker"
 import { Card, Checkbox, RadioGroup } from "../../components/ui/Controls"
+import { InfoTooltip } from "../../components/ui/InfoTooltip"
 import { useWizard } from "../../context/WizardContext"
 import { COUNTRIES, US_STATES } from "../../constants"
 import type { ControlPerson } from "../../types"
@@ -33,6 +34,13 @@ export function ControlPersonPage() {
   const navigate = useNavigate()
   const p = state.controlPerson
   const demoRunning = useRef(false)
+  const fieldRefs = useRef<Partial<Record<keyof ControlPerson, HTMLInputElement | HTMLButtonElement | null>>>({})
+
+  function fieldRef(key: keyof ControlPerson) {
+    return (el: HTMLInputElement | HTMLButtonElement | null) => {
+      fieldRefs.current[key] = el
+    }
+  }
 
   function set<K extends keyof typeof p>(key: K, value: (typeof p)[K]) {
     update({ controlPerson: { ...p, [key]: value } })
@@ -44,6 +52,7 @@ export function ControlPersonPage() {
     const next: ControlPerson = { ...p }
 
     async function typeField(key: keyof ControlPerson, text: string) {
+      fieldRefs.current[key]?.focus()
       for (let i = 1; i <= text.length; i++) {
         ;(next[key] as string) = text.slice(0, i)
         update({ controlPerson: { ...next } })
@@ -53,6 +62,7 @@ export function ControlPersonPage() {
     }
 
     async function selectField(key: keyof ControlPerson, value: string) {
+      fieldRefs.current[key]?.focus()
       await delay(250)
       ;(next[key] as string) = value
       update({ controlPerson: { ...next } })
@@ -68,6 +78,10 @@ export function ControlPersonPage() {
 
     demoRunning.current = false
   }
+
+  useEffect(() => {
+    runAutoFillDemo()
+  }, [])
 
   const requiredFilled =
     p.firstName &&
@@ -94,44 +108,62 @@ export function ControlPersonPage() {
     <WizardShell
       stepKey="control-person"
       title="Add Control Person"
-      subtitle="Tell us about the individual responsible for managing your business."
+      subtitle="To approve automatic payments, we need to verify the identity of the one person responsible for managing your business."
       onBack={() => navigate("/enroll/company-info")}
       onNext={() => navigate("/enroll/beneficial-owners")}
       nextDisabled={!requiredFilled}
-      onSaveForLater={() => navigate("/")}
     >
       <div className="flex flex-col gap-xxs">
-        <h2 className="text-sm font-semibold text-text-primary">Control Person</h2>
+        <h2 className="flex items-center gap-xs text-sm font-semibold text-text-primary">
+          Control Person
+          <InfoTooltip
+            sections={[
+              {
+                title: "Control Person",
+                body: "One individual with significant responsibility to control, manage, or direct the company. This is usually a senior leader, such as a CEO, president, managing member, or general partner. If several people share management duties, select just one to add here.",
+              },
+              {
+                title: "Why We Collect This",
+                body: "We're required to verify identities before approving automatic payments. To do this, we securely send this information to AvidXchange, who runs a background check.",
+              },
+            ]}
+          />
+        </h2>
         <Card className="flex flex-col gap-md">
         <div className="grid grid-cols-3 gap-md">
           <TextField
+            ref={fieldRef("firstName")}
             label="First Name"
             required
             value={p.firstName}
             onChange={(e) => set("firstName", e.target.value)}
-            onFocus={() => runAutoFillDemo()}
           />
-          <TextField label="Last Name" required value={p.lastName} onChange={(e) => set("lastName", e.target.value)} />
-          <TextField label="Title" required value={p.title} onChange={(e) => set("title", e.target.value)} />
-          <TextField label="Email" type="email" required value={p.email} onChange={(e) => set("email", e.target.value)} />
-          <DatePicker label="Date of Birth" required value={p.dateOfBirth} onChange={(v) => set("dateOfBirth", v)} />
+          <TextField ref={fieldRef("lastName")} label="Last Name" required value={p.lastName} onChange={(e) => set("lastName", e.target.value)} />
+          <TextField ref={fieldRef("title")} label="Title" required value={p.title} onChange={(e) => set("title", e.target.value)} />
+          <TextField ref={fieldRef("email")} label="Email" type="email" required value={p.email} onChange={(e) => set("email", e.target.value)} />
+          <DatePicker ref={fieldRef("dateOfBirth")} label="Date of Birth" required value={p.dateOfBirth} onChange={(v) => set("dateOfBirth", v)} />
         </div>
 
-        <h3 className="border-b border-border-primary pb-xxs text-sm font-semibold text-text-primary">
-          Home Address
-        </h3>
+        <div className="flex flex-col gap-xxs border-b border-border-primary pb-xxs">
+          <h3 className="text-sm font-semibold text-text-primary">Home Address</h3>
+          <p className="text-sm font-normal text-label-gray">
+            Enter this person's U.S. residential address, which we'll use to verify their identity.
+          </p>
+        </div>
         <div className="grid grid-cols-3 gap-md">
           <TextField
+            ref={fieldRef("addressLine1")}
             label="Street"
             required
             className="col-span-2"
             value={p.addressLine1}
             onChange={(e) => set("addressLine1", e.target.value)}
           />
-          <TextField label="City" required value={p.city} onChange={(e) => set("city", e.target.value)} />
-          <Dropdown label="State" required options={US_STATES} value={p.state} onChange={(v) => set("state", v)} />
-          <TextField label="Postal Code" required value={p.zip} onChange={(e) => set("zip", e.target.value)} />
+          <TextField ref={fieldRef("city")} label="City" required value={p.city} onChange={(e) => set("city", e.target.value)} />
+          <Dropdown ref={fieldRef("state")} label="State" required options={US_STATES} value={p.state} onChange={(v) => set("state", v)} />
+          <TextField ref={fieldRef("zip")} label="Postal Code" required value={p.zip} onChange={(e) => set("zip", e.target.value)} />
           <Dropdown
+            ref={fieldRef("country")}
             label="Country"
             required
             className="col-span-2"
@@ -175,7 +207,7 @@ export function ControlPersonPage() {
 
             <RadioGroup
               required
-              legend="Have you lived at any other address during the previous three years?"
+              legend="Has this person lived at any other address during the previous three years?"
               options={[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }]}
               value={p.livedAtOtherAddress}
               onChange={(v) => set("livedAtOtherAddress", v as typeof p.livedAtOtherAddress)}

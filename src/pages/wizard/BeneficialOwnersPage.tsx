@@ -5,6 +5,7 @@ import { TextField } from "../../components/ui/Field"
 import { Dropdown } from "../../components/ui/Dropdown"
 import { DatePicker } from "../../components/ui/DatePicker"
 import { Card, Checkbox, RadioGroup } from "../../components/ui/Controls"
+import { InfoTooltip } from "../../components/ui/InfoTooltip"
 import { useWizard } from "../../context/WizardContext"
 import { COUNTRIES, US_STATES } from "../../constants"
 import { makeId, type BeneficialOwner } from "../../types"
@@ -77,11 +78,28 @@ export function BeneficialOwnersPage() {
     <WizardShell
       stepKey="beneficial-owners"
       title="Add Beneficial Owners"
-      subtitle="Add up to 4 individuals who own or control 25% or more of the company."
+      subtitle={
+        <>
+          To approve automatic payments, we need to verify the identity of each person who owns 25% or more of your company (up to 4 people).
+          <span className="ml-xs inline-flex align-middle">
+            <InfoTooltip
+              sections={[
+                {
+                  title: "Beneficial Owner",
+                  body: "Any individual who owns or exercises control over 25% or more of the company or legal entity.",
+                },
+                {
+                  title: "Why We Collect This",
+                  body: "We're required to verify identities before approving automatic payments. To do this, we securely send this information to AvidXchange, who runs a background check.",
+                },
+              ]}
+            />
+          </span>
+        </>
+      }
       onBack={() => navigate("/enroll/control-person")}
       onNext={() => navigate("/enroll/contacts")}
       nextDisabled={!ownersValid}
-      onSaveForLater={() => navigate("/")}
     >
       <div className="flex flex-col gap-md">
         <RadioGroup
@@ -139,9 +157,12 @@ export function BeneficialOwnersPage() {
                 />
               </div>
 
-              <h3 className="border-b border-border-primary pb-xxs text-sm font-semibold text-text-primary">
-                Home Address
-              </h3>
+              <div className="flex flex-col gap-xxs border-b border-border-primary pb-xxs">
+                <h3 className="text-sm font-semibold text-text-primary">Home Address</h3>
+                <p className="text-sm font-normal text-label-gray">
+                  Enter this person's U.S. residential address, which we'll use to verify their identity.
+                </p>
+              </div>
               <div className="grid grid-cols-3 gap-md">
                 <TextField
                   label="Street"
