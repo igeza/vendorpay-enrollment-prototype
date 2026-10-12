@@ -5,6 +5,7 @@ import { TextField } from "../../components/ui/Field"
 import { Dropdown } from "../../components/ui/Dropdown"
 import { DatePicker } from "../../components/ui/DatePicker"
 import { Card, Checkbox, RadioGroup } from "../../components/ui/Controls"
+import { InfoTooltip } from "../../components/ui/InfoTooltip"
 import { useWizard } from "../../context/WizardContext"
 import { COUNTRIES, US_STATES } from "../../constants"
 import type { ControlPerson } from "../../types"
@@ -107,13 +108,27 @@ export function ControlPersonPage() {
     <WizardShell
       stepKey="control-person"
       title="Add Control Person"
-      subtitle="Tell us about the individual responsible for managing your business."
+      subtitle="To approve automatic payments, we need to verify the identity of the one person responsible for managing your business."
       onBack={() => navigate("/enroll/company-info")}
       onNext={() => navigate("/enroll/beneficial-owners")}
       nextDisabled={!requiredFilled}
     >
       <div className="flex flex-col gap-xxs">
-        <h2 className="text-sm font-semibold text-text-primary">Control Person</h2>
+        <h2 className="flex items-center gap-xs text-sm font-semibold text-text-primary">
+          Control Person
+          <InfoTooltip
+            sections={[
+              {
+                title: "Control Person",
+                body: "One individual with significant responsibility to control, manage, or direct the company. This is usually a senior leader, such as a CEO, president, managing member, or general partner. If several people share management duties, select just one to add here.",
+              },
+              {
+                title: "Why We Collect This",
+                body: "We're required to verify identities before approving automatic payments. To do this, we securely send this information to AvidXchange, who runs a background check.",
+              },
+            ]}
+          />
+        </h2>
         <Card className="flex flex-col gap-md">
         <div className="grid grid-cols-3 gap-md">
           <TextField
@@ -129,9 +144,12 @@ export function ControlPersonPage() {
           <DatePicker ref={fieldRef("dateOfBirth")} label="Date of Birth" required value={p.dateOfBirth} onChange={(v) => set("dateOfBirth", v)} />
         </div>
 
-        <h3 className="border-b border-border-primary pb-xxs text-sm font-semibold text-text-primary">
-          Home Address
-        </h3>
+        <div className="flex flex-col gap-xxs border-b border-border-primary pb-xxs">
+          <h3 className="text-sm font-semibold text-text-primary">Home Address</h3>
+          <p className="text-sm font-normal text-label-gray">
+            Enter this person's U.S. residential address, which we'll use to verify their identity.
+          </p>
+        </div>
         <div className="grid grid-cols-3 gap-md">
           <TextField
             ref={fieldRef("addressLine1")}
@@ -189,7 +207,7 @@ export function ControlPersonPage() {
 
             <RadioGroup
               required
-              legend="Have you lived at any other address during the previous three years?"
+              legend="Has this person lived at any other address during the previous three years?"
               options={[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }]}
               value={p.livedAtOtherAddress}
               onChange={(v) => set("livedAtOtherAddress", v as typeof p.livedAtOtherAddress)}

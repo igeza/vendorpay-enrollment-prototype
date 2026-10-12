@@ -10,7 +10,7 @@ import closeIcon from "../assets/splash/shell/overlay-close-icon.svg"
 interface WizardShellProps {
   stepKey: StepKey
   title: string
-  subtitle?: string
+  subtitle?: ReactNode
   children: ReactNode
   onBack?: () => void
   onNext?: () => void

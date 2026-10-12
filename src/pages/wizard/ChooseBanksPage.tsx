@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { WizardShell } from "../../components/WizardShell"
@@ -76,16 +76,18 @@ export function ChooseBanksPage() {
   function fillRoutingFromMicr() {
     update({
       banks: banks.map((b) => {
-        const micr = MICR_DATA[b.bankName]
+        const micr = b.selected ? MICR_DATA[b.bankName] : undefined
         return micr ? { ...b, routingNumber: micr.routingNumber, accountNumber: micr.accountNumber } : b
       }),
     })
   }
 
-  async function runOwnerAutoFill() {
+  async function runOwnerAutoFill(rowId: string) {
     if (demoRunning.current) return
     const rows = banks.filter((b) => b.selected && !b.ownerName && OWNER_DEMO_DATA[b.bankName])
-    if (!rows.length) return
+    if (!rows.some((b) => b.id === rowId)) return
+    // Start with the row that was clicked, then fill the remaining selected rows in order.
+    rows.sort((a, b) => Number(b.id === rowId) - Number(a.id === rowId))
     demoRunning.current = true
 
     const next = banks.map((b) => ({ ...b }))
@@ -116,11 +118,6 @@ export function ChooseBanksPage() {
 
     demoRunning.current = false
   }
-
-  // As soon as any bank row is selected (and still missing owner info), fill it automatically.
-  useEffect(() => {
-    runOwnerAutoFill()
-  }, [banks])
 
   const filtered = banks.filter((b) => b.bankName.toLowerCase().includes(query.toLowerCase()))
   const allFilteredSelected = filtered.length > 0 && filtered.every((b) => b.selected)
@@ -154,8 +151,13 @@ export function ChooseBanksPage() {
               className="h-9 w-full rounded-sm border border-brand-blue bg-white pl-8 pr-sm text-sm outline-none placeholder:italic placeholder:text-[#b3b3b3] focus:border-brand-blue"
             />
           </div>
-          <button type="button" onClick={fillRoutingFromMicr} className="text-sm font-normal text-text-link hover:underline">
-            Fill Routing &amp; Account # From MICR
+          <button
+            type="button"
+            onClick={fillRoutingFromMicr}
+            disabled={!selected.length}
+            className="text-sm font-normal text-text-link enabled:hover:underline disabled:cursor-not-allowed disabled:text-[#b3b3b3]"
+          >
+            Fill Routing &amp; Account # From MICR for Selected Accounts
           </button>
         </div>
 
@@ -253,6 +255,7 @@ export function ChooseBanksPage() {
                         : "border-border-disabled bg-[#f8f8f8] text-[#b3b3b3]",
                     )}
                     value={b.ownerName}
+                    onFocus={() => runOwnerAutoFill(b.id)}
                     onChange={(e) => patchBank(b.id, { ownerName: e.target.value })}
                   />
                 </div>

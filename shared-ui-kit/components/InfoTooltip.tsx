@@ -4,15 +4,23 @@ import infoIcon from "../assets/icon-info-tooltip.svg"
 
 const TOOLTIP_WIDTH = 312
 
+interface InfoTooltipSection {
+  title: string
+  body: string
+}
+
 interface InfoTooltipProps {
-  text: string
+  /** Plain descriptive text. Omit when passing `sections`. */
+  text?: string
+  /** Titled sections, each with a divider under its title, for longer explanations. */
+  sections?: InfoTooltipSection[]
   /** Override the default blue field-label icon, e.g. for a white icon on a dark register header. */
   icon?: string
   iconClassName?: string
 }
 
 /** Info icon that reveals a descriptive tooltip on hover/focus, next to a field label. */
-export function InfoTooltip({ text, icon, iconClassName }: InfoTooltipProps) {
+export function InfoTooltip({ text, sections, icon, iconClassName }: InfoTooltipProps) {
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -55,7 +63,18 @@ export function InfoTooltip({ text, icon, iconClassName }: InfoTooltipProps) {
             style={{ top: position.top, left: position.left, width: TOOLTIP_WIDTH }}
             className="fixed z-50 rounded-sm border border-border-primary bg-white p-md text-sm font-normal leading-[20px] text-text-primary drop-shadow-[0px_3px_3px_rgba(0,0,0,0.1)]"
           >
-            {text}
+            {sections ? (
+              <div className="flex flex-col gap-md">
+                {sections.map((section) => (
+                  <div key={section.title} className="flex flex-col gap-xs">
+                    <div className="border-b border-border-primary pb-xxs">{section.title}</div>
+                    <p>{section.body}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              text
+            )}
           </div>,
           document.body,
         )}
